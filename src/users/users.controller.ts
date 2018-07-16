@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { User } from '../entity/user';
 import { ApiUseTags, ApiResponse } from '@nestjs/swagger';
 import { LoginReq, LoginRes, RegisterReq, UpdateUserInoReq, UserListReq } from './users.dto';
-import { Roles } from 'grards/roles.grards';
+import { Roles } from '../grards/roles.grards';
 @ApiUseTags('users')
 @Controller('users')
 export class UsersController {
