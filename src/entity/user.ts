@@ -1,35 +1,27 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany} from 'typeorm';
-import { WechatUser } from './wechatUser';
+import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity} from 'typeorm';
+
 @Entity()
-export class User {
+export class User extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
+    username: string;
+
+    @Column()
     nickname: string;
 
     @Column()
-    name: string;
+    password: string;
 
     @Column()
-    avatar: string;
+    role: string;
 
-    @Column()
-    age: number;
+    @CreateDateColumn({ type: 'timestamp' })
+    createdAt: Date;
 
-    @Column()
-    mobile: string;
+    @UpdateDateColumn({ type: 'timestamp' })
+    updatedAt: Date;
 
-    @Column()
-    sex: string;
-
-    @Column()
-    type: number;
-
-    @Column()
-    remark: number;
-
-    @OneToMany(type => WechatUser, wechatUser => wechatUser.user)
-    wechatUsers: WechatUser[];
 }

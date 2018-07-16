@@ -1,37 +1,44 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, Req, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from '../entity/user';
 import { ApiUseTags, ApiResponse } from '@nestjs/swagger';
-import { LoginReq, LoginRes, RegisterReq, RegisterRes } from './users.dto';
+import { LoginReq, LoginRes, RegisterReq, UpdateUserInoReq, UserListReq } from './users.dto';
+import { Roles } from 'grards/roles.grards';
 @ApiUseTags('users')
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
   ) {}
-  @Post()
-  @ApiResponse({ status: 201, description: 'This action adds a new user'})
-  async create(@Body() userDto) {
-    await this.usersService.create(userDto);
-    return 'This action adds a new user';
-  }
 
-  @Get()
-  @ApiResponse({ status: 200, isArray: true})
-  async findAll(): Promise<User[]> {
-    const result: User[] = await this.usersService.findAll();
-    return result;
-  }
-  @Post('/wx_login')
+  @Post('/login')
+  @HttpCode(200)
   @ApiResponse({ status: 200, type: LoginRes })
-  async wxLogin(@Body() loginReq: LoginReq) {
-    const token = await this.usersService.wxLogin(loginReq.code);
+  async login(@Body() loginReq: LoginReq) {
+    const token = await this.usersService.login(loginReq.username, loginReq.password);
     return token;
   }
-  @Post('/register')
-  @ApiResponse({ status: 200, type: RegisterRes })
-  async register(@Body() registerReq: RegisterReq) {
-    const token: string = await this.usersService.wxLogin(registerReq.code);
-    return { token };
+
+  @Post('/registor')
+  @HttpCode(204)
+  @ApiResponse({ status: 204 })
+  async registor(@Body() registerReq: RegisterReq) {
+    await this.usersService.registor(registerReq.username, registerReq.password);
+  }
+
+  @Roles('admin')
+  @Get('/list')
+  @ApiResponse({ status: 200, type: UserListReq })
+  async userInfo(@Body() userListReq: UserListReq) {
+    let users = await this.usersService.userList(userListReq);
+    return users;
+  }
+
+  @Roles('admin')
+  @Put('/password')
+  @HttpCode(204)
+  @ApiResponse({ status: 204 })
+  async changePassword(@Body() updateUserInoReq: UpdateUserInoReq) {
+    await this.usersService.updateUserInfo(updateUserInoReq);
   }
 }

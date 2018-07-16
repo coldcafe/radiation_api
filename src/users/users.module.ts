@@ -3,10 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { User } from '../entity/user';
-import { WechatUser } from '../entity/wechatUser';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, WechatUser])],
+  imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
   providers: [
     UsersService,

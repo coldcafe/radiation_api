@@ -1,8 +1,8 @@
-# nest-demo
+# radiation_api
 
 ## Description
 
-nest-demo
+radiation api
 
 ## Installation
 

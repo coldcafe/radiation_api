@@ -1,71 +1,78 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { User } from '../entity/user';
-import { WechatUser } from '../entity/wechatUser';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CONST } from '../config/constants';
 import { ConfigService } from '../config/config.service';
 import axios from 'axios';
 import * as jwt from 'jsonwebtoken';
+import { UpdateUserInoReq, UserListReq } from './users.dto';
 
 @Injectable()
 export class UsersService {
+  private readonly jwtSecret: string;
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(WechatUser)
-    private readonly wechatUserRepository: Repository<WechatUser>,
     private readonly config: ConfigService,
-  ) {}
-
-  async create(userDto) {
-    const user = new User();
-    user.name = userDto.name;
-    user.age = userDto.age;
-    user.mobile = userDto.mobile;
-    user.type = CONST.USER_TYPE.STUDENT;
-    await this.userRepository.save(user);
+  ) {
+    this.jwtSecret = this.config.get('JWT_SECRET');
   }
 
   async findAll(): Promise<User[]> {
     return this.userRepository.find();
   }
 
-  async wxLogin(code: string): Promise<any> {
-    const wxLoginInfo = await axios({
-      baseURL: this.config.get('WX_API'),
-      method: 'GET',
-      url: '/sns/jscode2session',
-      params: {
-        appid: this.config.get('WX_LITE_APPID'),
-        secret: this.config.get('WX_LITE_APPSECRET'),
-        grant_type: 'authorization_code',
-        js_code: code,
-      },
-    });
-    if (wxLoginInfo.data.errcode) {
-        throw new Error(wxLoginInfo.data.errmsg);
+  async login(username: string, password: string): Promise<string> {
+    let user = await this.userRepository.findOne({ username });
+
+    if (!user) {
+      throw new ForbiddenException('用户不存在');
     }
-    const sessionKey = wxLoginInfo.data.session_key;
-    const openid = wxLoginInfo.data.openid;
-    const unionid = wxLoginInfo.data.unionid;
-    return { sessionKey, openid, unionid };
-    // let wechatUser = await this.wechatUserRepository.findOne({ openid }, { relations: ['user'] });
-    // if (!wechatUser) {
-    //   wechatUser = new WechatUser();
-    //   wechatUser.openid = openid;
-    //   wechatUser.unionid = unionid;
-    //   wechatUser.sessionKey = sessionKey;
-    // }
-    // if (!wechatUser.user) {
-    //   let user = new User();
-    //   wechatUser.user = user;
-    // }
-    // await this.wechatUserRepository.save(wechatUser);
-    // console.log(wechatUser.user.id);
-    // let payload = {
-    //     avatar: userInfo.data.headimgurl,
-    //     name: userInfo.data.nickname,
-    // };
+
+    if (user.password !== password) {
+      throw new ForbiddenException('密码错误');
+    }
+
+    let payload = {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+    };
+    let token = jwt.sign(payload, this.jwtSecret);
+    return token;
+  }
+
+  async registor(username: string, password: string) {
+    let user = new User();
+    user.username = username;
+    user.password = password;
+    await user.save();
+  }
+
+  async updateUserInfo(userIno: UpdateUserInoReq) {
+    let user = await this.userRepository.findOne({ id: userIno.id });
+    user.password = userIno.password;
+    user.nickname = userIno.nickname;
+    await user.save();
+  }
+
+  async userList(userListReq: UserListReq): Promise<User[]> {
+
+    let where = {};
+    let take = userListReq.limit;
+    let skip = (userListReq.page - 1) * take;
+    if (userListReq.nickname) {
+      where['nickname'] = userListReq.nickname;
+    }
+    if (userListReq.username) {
+      where['username'] = userListReq.username;
+    }
+    let users = await this.userRepository.find({
+      where,
+      take,
+      skip,
+    });
+    return users;
   }
 }
