@@ -6,7 +6,7 @@ import { CONST } from '../config/constants';
 import { ConfigService } from '../config/config.service';
 import axios from 'axios';
 import * as jwt from 'jsonwebtoken';
-import { UpdateUserInoReq, UserListReq } from './users.dto';
+import { UpdateUserInoReq, UserListReq, UserDto } from './users.dto';
 
 @Injectable()
 export class UsersService {
@@ -57,7 +57,7 @@ export class UsersService {
     await user.save();
   }
 
-  async userList(userListReq: UserListReq): Promise<User[]> {
+  async userList(userListReq: UserListReq): Promise<UserDto[]> {
 
     let where = {};
     let take = userListReq.limit;
@@ -73,6 +73,14 @@ export class UsersService {
       take,
       skip,
     });
-    return users;
+    return users.map(((user) => {
+      let userDto = new UserDto();
+      userDto.id = user.id;
+      userDto.username = user.username;
+      userDto.nickname = user.nickname;
+      userDto.role = user.role;
+      userDto.createdAt = user.createdAt;
+      return userDto;
+    }));
   }
 }

@@ -1,4 +1,5 @@
 import { ApiModelProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 export class LoginReq {
   @ApiModelProperty()
@@ -8,7 +9,7 @@ export class LoginReq {
 }
 export class LoginRes {
   @ApiModelProperty({ description: '登录态：jwt token, 携带数据： { id, username, role }' })
-  readonly token: string;
+  token: string;
 }
 
 export class RegisterReq {
@@ -28,12 +29,39 @@ export class UpdateUserInoReq {
 }
 
 export class UserListReq {
+
   @ApiModelProperty()
+  @Type(() => Number)
   readonly page: number = 1;
+
   @ApiModelProperty()
+  @Type(() => Number)
   readonly limit: number = 10;
+
   @ApiModelProperty({ required: false })
+  @Type(() => String)
   readonly username?: string;
+
   @ApiModelProperty({ required: false })
+  @Type(() => String)
   readonly nickname?: string;
+}
+
+export class UserDto {
+
+  @ApiModelProperty()
+  id: number;
+
+  @ApiModelProperty()
+  username: string;
+
+  @ApiModelProperty()
+  nickname: string;
+
+  @ApiModelProperty()
+  role: string;
+
+  @ApiModelProperty()
+  createdAt: Date;
+
 }

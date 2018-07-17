@@ -28,6 +28,8 @@
     "@types/jsonwebtoken": "^7.2.7",
     "@types/node": "^9.3.0",
     "axios": "^0.18.0",
+    "class-transformer": "^0.1.9",
+    "class-validator": "^0.8.5",
     "fastify-formbody": "^2.0.0",
     "jsonwebtoken": "^8.3.0",
     "log4js": "^2.9.0",

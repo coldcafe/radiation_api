@@ -8,10 +8,12 @@ import { ConfigModule } from './config/config.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './grards/roles.grards';
 import { User } from './entity/user';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
-  imports: [ ConfigModule, DatabaseModule, UsersModule, TypeOrmModule.forFeature([User]) ],
+  imports: [ ConfigModule, DatabaseModule, UsersModule, ReportsModule, TypeOrmModule.forFeature([User]) ],
   controllers: [ AppController ],
   providers: [ AppService, { provide: APP_GUARD, useClass: RolesGuard } ],
 })
+
 export class AppModule {}

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, Req, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, Req, Request, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from '../entity/user';
 import { ApiUseTags, ApiResponse } from '@nestjs/swagger';
@@ -29,7 +29,8 @@ export class UsersController {
   @Roles('admin')
   @Get('/list')
   @ApiResponse({ status: 200, type: UserListReq })
-  async userInfo(@Body() userListReq: UserListReq) {
+  async userInfo(@Query() userListReq: UserListReq) {
+    console.log(userListReq);
     let users = await this.usersService.userList(userListReq);
     return users;
   }
