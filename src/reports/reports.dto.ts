@@ -9,20 +9,15 @@ export class ReportDataDto {
   @ApiModelProperty({ description: '刻度因子', default: 1 })
   K: number = 1;
 
-  @ApiModelProperty({ description: '10次测量值', isArray: true, maxLength: 10 })
-  values: number;
+  @ApiModelProperty({ description: '10次测量值,平均值,标准差,结果', isArray: true, maxLength: 13, minLength: 13 })
+  values: string;
 
-  @ApiModelProperty({ description: '平均值'})
-  average: number;
-
-  @ApiModelProperty({ description: '标准差'})
-  standardDeviation: number;
-
-  @ApiModelProperty({ description: '结果'})
-  D: number;
 }
 
 export class ReportDto {
+
+  @ApiModelProperty({ description: '测量人' })
+  readonly measurePerson: string;
 
   @ApiModelProperty({ description: '仪器型号和编号' })
   readonly machineNO: string;
