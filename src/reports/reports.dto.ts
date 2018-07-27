@@ -56,3 +56,13 @@ export class ReportDto {
   readonly data: ReportDataDto;
 
 }
+
+export class ReportListReq {
+
+  @ApiModelProperty({ default: 10, required: false })
+  readonly limit: number = 10;
+
+  @ApiModelProperty({ default: 1, required: false })
+  readonly page: number = 1;
+
+}

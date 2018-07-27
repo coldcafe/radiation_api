@@ -7,7 +7,37 @@ export class Report extends BaseEntity {
     id: number;
 
     @Column()
-    name: string;
+    measurePerson: string;
+
+    @Column()
+    machineNO: string;
+
+    @Column()
+    taskNO: string;
+
+    @Column()
+    measuredAt: number;
+
+    @Column()
+    type: string;
+
+    @Column()
+    weather: string;
+
+    @Column()
+    address: string;
+
+    @Column()
+    unit: string;
+
+    @Column()
+    contactPerson: string;
+
+    @Column()
+    contactPersonTel: string;
+
+    @Column()
+    GPS: string;
 
     @CreateDateColumn({ type: 'timestamp' })
     createdAt: Date;
