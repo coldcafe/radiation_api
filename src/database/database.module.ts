@@ -1,8 +1,6 @@
 import * as path from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigService } from '../config/config.service';
-
-const config = new ConfigService();
+import config from '../config';
 
 export const DatabaseModule = TypeOrmModule.forRoot({
   type: 'mysql',

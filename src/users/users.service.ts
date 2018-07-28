@@ -3,8 +3,8 @@ import { User } from '../entity/user';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CONST } from '../config/constants';
-import { ConfigService } from '../config/config.service';
 import axios from 'axios';
+import config from '../config';
 import * as jwt from 'jsonwebtoken';
 import { UpdateUserInoReq, UserListReq, UserDto } from './users.dto';
 
@@ -14,9 +14,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly config: ConfigService,
   ) {
-    this.jwtSecret = this.config.get('JWT_SECRET');
+    this.jwtSecret = config.get('JWT_SECRET');
   }
 
   async findAll(): Promise<User[]> {
@@ -44,6 +43,10 @@ export class UsersService {
   }
 
   async registor(username: string, password: string) {
+    let _user = await this.userRepository.findOne({ username });
+    if (_user) {
+      throw new ForbiddenException('用户已存在');
+    }
     let user = new User();
     user.username = username;
     user.password = password;

@@ -1,10 +1,8 @@
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import * as fs from 'fs';
-import { Injectable } from '@nestjs/common';
 
-@Injectable()
-export class ConfigService {
+class Config {
   private readonly envConfig: { [prop: string]: string };
 
   constructor() {
@@ -17,3 +15,4 @@ export class ConfigService {
     return process.env[key] || this.envConfig[key];
   }
 }
+export default new Config();

@@ -9,8 +9,8 @@ export class ReportDataDto {
   @ApiModelProperty({ description: '刻度因子', default: 1 })
   K: number = 1;
 
-  @ApiModelProperty({ description: '10次测量值,平均值,标准差,结果', isArray: true, maxLength: 13, minLength: 13 })
-  values: string;
+  @ApiModelProperty({ description: '10次测量值,平均值,标准差,结果', type: String, isArray: true, maxLength: 13, minLength: 13 })
+  values: string[];
 
 }
 
@@ -49,10 +49,10 @@ export class ReportDto {
   @ApiModelProperty({ description: 'GPS地址' })
   GPS: string;
 
-  @ApiModelProperty({ description: '照片, 上传七牛，传输七牛图片key到服务端保存', isArray: true })
+  @ApiModelProperty({ description: '照片, 上传七牛，传输七牛图片key到服务端保存', type: String, isArray: true })
   pictures: string[];
 
-  @ApiModelProperty({ description: '伽马剂量率记录表', isArray: true })
+  @ApiModelProperty({ description: '伽马剂量率记录表', type: ReportDataDto, isArray: true })
   data: ReportDataDto[];
 
 }
