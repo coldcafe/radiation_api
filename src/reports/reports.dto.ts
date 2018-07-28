@@ -17,43 +17,43 @@ export class ReportDataDto {
 export class ReportDto {
 
   @ApiModelProperty({ description: '测量人' })
-  readonly measurePerson: string;
+  measurePerson: string;
 
   @ApiModelProperty({ description: '仪器型号和编号' })
-  readonly machineNO: string;
+  machineNO: string;
 
   @ApiModelProperty({ description: '任务编号' })
-  readonly taskNO: string;
+  taskNO: string;
 
   @ApiModelProperty({ description: '测量时间, unix时间戳' })
-  readonly measuredAt: number;
+  measuredAt: number;
 
   @ApiModelProperty({ description: '检查类别' })
-  readonly type: string;
+  type: string;
 
   @ApiModelProperty({ description: '天气状况' })
-  readonly weather: string;
+  weather: string;
 
   @ApiModelProperty({ description: '测量地址' })
-  readonly address: string;
+  address: string;
 
   @ApiModelProperty({ description: '被检测单位' })
-  readonly unit: string;
+  unit: string;
 
   @ApiModelProperty({ description: '被检测单位联系人' })
-  readonly contactPerson: string;
+  contactPerson: string;
 
   @ApiModelProperty({ description: '被检测单位联系人电话' })
-  readonly contactPersonTel: string;
+  contactPersonTel: string;
 
   @ApiModelProperty({ description: 'GPS地址' })
-  readonly GPS: string;
+  GPS: string;
 
   @ApiModelProperty({ description: '照片, 上传七牛，传输七牛图片key到服务端保存', isArray: true })
-  readonly pictures: string;
+  pictures: string[];
 
   @ApiModelProperty({ description: '伽马剂量率记录表', isArray: true })
-  readonly data: ReportDataDto;
+  data: ReportDataDto[];
 
 }
 
