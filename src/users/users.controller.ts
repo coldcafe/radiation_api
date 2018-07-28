@@ -16,7 +16,7 @@ export class UsersController {
   @ApiResponse({ status: 200, type: LoginRes })
   async login(@Body() loginReq: LoginReq) {
     const token = await this.usersService.login(loginReq.username, loginReq.password);
-    return token;
+    return { token };
   }
 
   @Post('/registor')
