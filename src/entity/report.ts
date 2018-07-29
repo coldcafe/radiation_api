@@ -1,10 +1,14 @@
-import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity, JoinColumn, OneToMany} from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity, JoinColumn, OneToMany, ManyToOne} from 'typeorm';
 import { ReportData } from './report_data';
+import { User } from './user';
 @Entity()
 export class Report extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     id: number;
+
+    @ManyToOne(type => User, user => user.reports)
+    user: User;
 
     @Column()
     measurePerson: string;
@@ -42,8 +46,9 @@ export class Report extends BaseEntity {
     @Column()
     pictures: string;
 
-    @JoinColumn()
-    @OneToMany(type => ReportData, reportData => reportData.report)
+    @OneToMany(type => ReportData, reportData => reportData.report, {
+        cascade: true,
+    })
     data: ReportData[];
 
     @CreateDateColumn({ type: 'timestamp' })

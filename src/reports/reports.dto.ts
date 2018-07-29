@@ -1,5 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
+import { IsInt, IsOptional } from 'class-validator';
 
 export class ReportDataDto {
 
@@ -9,8 +10,8 @@ export class ReportDataDto {
   @ApiModelProperty({ description: '刻度因子', default: 1 })
   K: number = 1;
 
-  @ApiModelProperty({ description: '10次测量值,平均值,标准差,结果', type: String, isArray: true, maxLength: 13, minLength: 13 })
-  values: string[];
+  @ApiModelProperty({ description: '10次测量值,平均值,标准差,结果  13个值' })
+  values: string;
 
 }
 
@@ -59,9 +60,32 @@ export class ReportDto {
 
 export class ReportListReq {
 
+  @IsInt()
+  @IsOptional()
+  @Type(() => Number)
+  @ApiModelProperty({ description: '开始时间', required: false })
+  startTime: number;
+
+  @IsInt()
+  @IsOptional()
+  @Type(() => Number)
+  @ApiModelProperty({ description: '结束时间', required: false })
+  endTime: number;
+
+  @IsInt()
+  @IsOptional()
+  @ApiModelProperty({ description: '地点', required: false })
+  address: string;
+
+  @IsInt()
+  @IsOptional()
+  @Type(() => Number)
   @ApiModelProperty({ default: 10, required: false })
   readonly limit: number = 10;
 
+  @IsInt()
+  @IsOptional()
+  @Type(() => Number)
   @ApiModelProperty({ default: 1, required: false })
   readonly page: number = 1;
 

@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, Req, Request
 import { UsersService } from './users.service';
 import { User } from '../entity/user';
 import { ApiUseTags, ApiResponse } from '@nestjs/swagger';
-import { LoginReq, LoginRes, RegisterReq, UpdateUserInoReq, UserListReq } from './users.dto';
+import { LoginReq, LoginRes, RegisterReq, UpdateUserInoReq, UserListReq, UserDto } from './users.dto';
 import { Roles } from '../grards/roles.grards';
 @ApiUseTags('users')
 @Controller('users')
@@ -26,16 +26,15 @@ export class UsersController {
     await this.usersService.registor(registerReq.username, registerReq.password);
   }
 
-  @Roles('admin')
+  @Roles('superadmin')
   @Get('/list')
-  @ApiResponse({ status: 200, type: UserListReq })
+  @ApiResponse({ status: 200, type: UserDto })
   async userInfo(@Query() userListReq: UserListReq) {
-    console.log(userListReq);
     let users = await this.usersService.userList(userListReq);
     return users;
   }
 
-  @Roles('admin')
+  @Roles('superadmin')
   @Put('/password')
   @HttpCode(204)
   @ApiResponse({ status: 204 })

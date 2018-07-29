@@ -1,11 +1,17 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
+import { IsString, IsInt, IsOptional } from 'class-validator';
 
 export class LoginReq {
+
+  @IsString()
   @ApiModelProperty()
   readonly username: string;
+
+  @IsString()
   @ApiModelProperty()
   readonly password: string;
+
 }
 export class LoginRes {
   @ApiModelProperty({ description: '登录态：jwt token, 携带数据： { id, username, role }' })
@@ -13,28 +19,41 @@ export class LoginRes {
 }
 
 export class RegisterReq {
+
+  @IsString()
   @ApiModelProperty()
   readonly username: string;
+
+  @IsString()
   @ApiModelProperty()
   readonly password: string;
+
 }
 
 export class UpdateUserInoReq {
+
+  @IsInt()
   @ApiModelProperty()
   readonly id: number;
+
+  @IsString()
+  @IsOptional()
   @ApiModelProperty({ required: false })
   readonly password?: string;
+
+  @IsString()
+  @IsOptional()
   @ApiModelProperty({ required: false })
   readonly nickname?: string;
 }
 
 export class UserListReq {
 
-  @ApiModelProperty()
+  @ApiModelProperty({ required: false })
   @Type(() => Number)
   readonly page: number = 1;
 
-  @ApiModelProperty()
+  @ApiModelProperty({ required: false })
   @Type(() => Number)
   readonly limit: number = 10;
 

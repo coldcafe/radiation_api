@@ -29,13 +29,15 @@ export class RolesGuard implements CanActivate {
       return false;
     }
     let decoded: any = jwt.verify(req.headers.authorization, this.jwtSecret);
-    let userId = decoded.id;
-    let user = await this.userRepository.findOne({ id: userId });
-    if (!user) {
+    if (!decoded) {
       return false;
     }
-    req.userId = userId;
-    const hasRole = roles.some(role => role === user.role);
+    req.user = decoded;
+
+    if (roles.length === 0) {
+      return true;
+    }
+    const hasRole = roles.some(role => role === req.user.role);
     return hasRole;
   }
 }

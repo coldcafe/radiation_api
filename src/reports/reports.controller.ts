@@ -12,12 +12,13 @@ export class ReportsController {
   ) {}
 
   @Post('/upload')
+  @Roles()
   @ApiResponse({ status: 201 })
   async uploadReport(@Body() reportDto: ReportDto) {
     await this.reportsService.createReport(reportDto);
   }
 
-  @Post('/list')
+  @Get('/list')
   @ApiResponse({ status: 200, type: ReportDto, isArray: true })
   async reportList(@Query() query: ReportListReq) {
     let reports = await this.reportsService.reportList(query.page, query.limit);
@@ -42,6 +43,7 @@ export class ReportsController {
         reportDataDto.values = item.values;
         return reportDataDto;
       });
+      return reportDto;
     });
   }
 }

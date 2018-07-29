@@ -1,4 +1,5 @@
-import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity} from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity, OneToMany} from 'typeorm';
+import { Report } from './report';
 
 @Entity()
 export class User extends BaseEntity {
@@ -17,6 +18,9 @@ export class User extends BaseEntity {
 
     @Column()
     role: string;
+
+    @OneToMany(type => Report, report => report.user)
+    reports: Report[];
 
     @CreateDateColumn({ type: 'timestamp' })
     createdAt: Date;
