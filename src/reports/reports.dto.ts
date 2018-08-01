@@ -1,6 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional } from 'class-validator';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export class ReportDataDto {
 
@@ -72,10 +72,15 @@ export class ReportListReq {
   @ApiModelProperty({ description: '结束时间', required: false })
   endTime: number;
 
-  @IsInt()
+  @IsString()
   @IsOptional()
   @ApiModelProperty({ description: '地点', required: false })
   address: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiModelProperty({ description: '用户名', required: false })
+  username: string;
 
   @IsInt()
   @IsOptional()
@@ -88,5 +93,15 @@ export class ReportListReq {
   @Type(() => Number)
   @ApiModelProperty({ default: 1, required: false })
   readonly page: number = 1;
+
+}
+
+export class ReportListDto {
+
+  @ApiModelProperty({ type: ReportDto, isArray: true })
+  reports: ReportDto[];
+
+  @ApiModelProperty({ type: Number })
+  count: number;
 
 }

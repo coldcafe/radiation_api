@@ -2,8 +2,9 @@ import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, Req, Request
 import { ReportsService } from './reports.service';
 import { User } from '../entity/user';
 import { ApiUseTags, ApiResponse } from '@nestjs/swagger';
-import { ReportDto, ReportListReq, ReportDataDto } from './reports.dto';
+import { ReportDto, ReportListReq, ReportDataDto, ReportListDto } from './reports.dto';
 import { Roles } from '../grards/roles.grards';
+import { UserInfo } from '../decorators/userInfo';
 @ApiUseTags('reports')
 @Controller('reports')
 export class ReportsController {
@@ -14,15 +15,19 @@ export class ReportsController {
   @Post('/upload')
   @Roles()
   @ApiResponse({ status: 201 })
-  async uploadReport(@Body() reportDto: ReportDto) {
-    await this.reportsService.createReport(reportDto);
+  async uploadReport(@UserInfo() userInfo, @Body() reportDto: ReportDto) {
+    await this.reportsService.createReport(userInfo.id, reportDto);
   }
 
   @Get('/list')
-  @ApiResponse({ status: 200, type: ReportDto, isArray: true })
-  async reportList(@Query() query: ReportListReq) {
-    let reports = await this.reportsService.reportList(query.page, query.limit);
-    return reports.map((report) => {
+  @Roles()
+  @ApiResponse({ status: 200, type: ReportListDto })
+  async reportList(@UserInfo() userInfo, @Query() query: ReportListReq) {
+    let { where, page, limit } = this.reportsService.reportQuery(userInfo, query);
+
+    let reports = await this.reportsService.reportList(where, page, limit);
+    let count = await this.reportsService.reportCount(where);
+    let reportsDto = reports.map((report) => {
       let reportDto = new ReportDto();
       reportDto.measurePerson = report.measurePerson;
       reportDto.machineNO = report.machineNO;
@@ -45,5 +50,6 @@ export class ReportsController {
       });
       return reportDto;
     });
+    return { reports: reportsDto, count };
   }
 }

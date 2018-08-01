@@ -7,6 +7,7 @@ import axios from 'axios';
 import config from '../config';
 import * as jwt from 'jsonwebtoken';
 import { UpdateUserInoReq, UserListReq, UserDto } from './users.dto';
+import { UserInfo } from './users.interface';
 
 @Injectable()
 export class UsersService {
@@ -33,7 +34,7 @@ export class UsersService {
       throw new ForbiddenException('密码错误');
     }
 
-    let payload = {
+    let payload: UserInfo = {
       id: user.id,
       username: user.username,
       role: user.role,

@@ -7,6 +7,7 @@ import config from './config';
 @Controller()
 export class AppController {
   private readonly qiniuMac: qiniu.auth.digest.Mac;
+  private readonly qiniuBucket: 'housedecoration';
   constructor(
     private readonly appService: AppService,
   ) {
@@ -22,6 +23,11 @@ export class AppController {
 
   @Get('/qiniu')
   async qiniu() {
-
+    let options = {
+      scope: this.qiniuBucket,
+    };
+    let putPolicy = new qiniu.rs.PutPolicy(options);
+    let uploadToken = putPolicy.uploadToken(this.qiniuMac);
+    return { uploadToken };
   }
 }

@@ -26,7 +26,7 @@ export class UsersController {
     await this.usersService.registor(registerReq.username, registerReq.password);
   }
 
-  @Roles('superadmin')
+  // @Roles('superadmin')
   @Get('/list')
   @ApiResponse({ status: 200, type: UserDto })
   async userInfo(@Query() userListReq: UserListReq) {
@@ -34,7 +34,7 @@ export class UsersController {
     return users;
   }
 
-  @Roles('superadmin')
+  // @Roles('superadmin')
   @Put('/password')
   @HttpCode(204)
   @ApiResponse({ status: 204 })
