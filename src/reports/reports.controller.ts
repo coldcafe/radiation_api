@@ -4,7 +4,7 @@ import { User } from '../entity/user';
 import { ApiUseTags, ApiResponse } from '@nestjs/swagger';
 import { ReportDto, ReportListReq, ReportDataDto, ReportListDto } from './reports.dto';
 import { Roles } from '../grards/roles.grards';
-import { UserInfo } from '../decorators/userInfo';
+import { UserInfo } from '../decorators/userinfo';
 @ApiUseTags('reports')
 @Controller('reports')
 export class ReportsController {
