@@ -10,7 +10,7 @@ import { UserInfo } from '../decorators/userinfo';
 export class ReportsController {
   constructor(
     private readonly reportsService: ReportsService,
-  ) {}
+  ) { }
 
   @Post('/upload')
   @Roles()
@@ -29,6 +29,7 @@ export class ReportsController {
     let count = await this.reportsService.reportCount(where);
     let reportsDto = reports.map((report) => {
       let reportDto = new ReportDto();
+      reportDto.id = report.id;
       reportDto.measurePerson = report.measurePerson;
       reportDto.machineNO = report.machineNO;
       reportDto.taskNO = report.taskNO;
@@ -43,6 +44,7 @@ export class ReportsController {
       reportDto.pictures = JSON.parse(report.pictures);
       reportDto.data = report.data.map((item) => {
         let reportDataDto = new ReportDataDto();
+        reportDataDto.id = item.id;
         reportDataDto.measurePoint = item.measurePoint;
         reportDataDto.K = item.K;
         reportDataDto.values = item.values;

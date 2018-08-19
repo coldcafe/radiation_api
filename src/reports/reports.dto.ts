@@ -4,6 +4,9 @@ import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export class ReportDataDto {
 
+  @ApiModelProperty()
+  id: number;
+
   @ApiModelProperty({ description: '测量位置' })
   measurePoint: string;
 
@@ -16,6 +19,9 @@ export class ReportDataDto {
 }
 
 export class ReportDto {
+
+  @ApiModelProperty()
+  id: number;
 
   @ApiModelProperty({ description: '测量人' })
   measurePerson: string;
