@@ -21,7 +21,7 @@ export class ReportsService {
     private readonly reportRepository: Repository<Report>,
     @InjectRepository(ReportData)
     private readonly reportDataRepository: Repository<ReportData>,
-  ) {}
+  ) { }
 
   async createReport(userId: number, reportDto: ReportDto) {
     let report = new Report();
@@ -72,6 +72,7 @@ export class ReportsService {
   }
 
   async reportList(where, page, limit) {
+    console.log(where);
     let reports = await this.reportRepository.find({
       where,
       take: limit,

@@ -10,8 +10,8 @@ export const DatabaseModule = TypeOrmModule.forRoot({
   password: 'aptx4869',
   database: 'test',
   synchronize: true,
-  logging: false,
+  logging: true,
   entities: [
-      __dirname + '/../entity/*{.ts,.js}',
+    __dirname + '/../entity/*{.ts,.js}',
   ],
 });
