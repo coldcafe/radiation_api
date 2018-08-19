@@ -84,3 +84,13 @@ export class UserDto {
   createdAt: Date;
 
 }
+
+export class UserListDto {
+
+  @ApiModelProperty({ type: UserDto, isArray: true })
+  users: UserDto[];
+
+  @ApiModelProperty()
+  count: number;
+
+}

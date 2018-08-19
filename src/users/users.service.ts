@@ -61,30 +61,31 @@ export class UsersService {
     await user.save();
   }
 
-  async userList(userListReq: UserListReq): Promise<UserDto[]> {
-
+  async userQuery(userListReq: UserListReq) {
+    let { username, nickname, page, limit } = userListReq;
     let where = {};
-    let take = userListReq.limit;
-    let skip = (userListReq.page - 1) * take;
-    if (userListReq.nickname) {
-      where['nickname'] = userListReq.nickname;
+    if (nickname) {
+      where['nickname'] = nickname;
     }
-    if (userListReq.username) {
-      where['username'] = userListReq.username;
+    if (username) {
+      where['username'] = username;
     }
+    return { where, page, limit };
+  }
+
+  async userList(where, page, limit) {
     let users = await this.userRepository.find({
       where,
-      take,
-      skip,
+      take: limit,
+      skip: (page - 1) * limit,
     });
-    return users.map(((user) => {
-      let userDto = new UserDto();
-      userDto.id = user.id;
-      userDto.username = user.username;
-      userDto.nickname = user.nickname;
-      userDto.role = user.role;
-      userDto.createdAt = user.createdAt;
-      return userDto;
-    }));
+    return users;
+  }
+
+  async userCount(where) {
+    let count = await this.userRepository.count({
+      where,
+    });
+    return count;
   }
 }

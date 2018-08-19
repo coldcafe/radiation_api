@@ -2,14 +2,14 @@ import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, Req, Request
 import { UsersService } from './users.service';
 import { User } from '../entity/user';
 import { ApiUseTags, ApiResponse } from '@nestjs/swagger';
-import { LoginReq, LoginRes, RegisterReq, UpdateUserInoReq, UserListReq, UserDto } from './users.dto';
+import { LoginReq, LoginRes, RegisterReq, UpdateUserInoReq, UserListReq, UserDto, UserListDto } from './users.dto';
 import { Roles } from '../grards/roles.grards';
 @ApiUseTags('users')
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-  ) {}
+  ) { }
 
   @Post('/login')
   @HttpCode(200)
@@ -28,10 +28,21 @@ export class UsersController {
 
   // @Roles('superadmin')
   @Get('/list')
-  @ApiResponse({ status: 200, type: UserDto })
-  async userInfo(@Query() userListReq: UserListReq) {
-    let users = await this.usersService.userList(userListReq);
-    return users;
+  @ApiResponse({ status: 200, type: UserListDto })
+  async userList(@Query() userListReq: UserListReq) {
+    let { where, page, limit } = await this.usersService.userQuery(userListReq);
+    let users = await this.usersService.userList(where, page, limit);
+    let count = await this.usersService.userCount(where);
+    let usersDto = users.map(((user) => {
+      let userDto = new UserDto();
+      userDto.id = user.id;
+      userDto.username = user.username;
+      userDto.nickname = user.nickname;
+      userDto.role = user.role;
+      userDto.createdAt = user.createdAt;
+      return userDto;
+    }));
+    return { users: usersDto, count };
   }
 
   // @Roles('superadmin')
