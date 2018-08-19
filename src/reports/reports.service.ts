@@ -1,6 +1,6 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { User } from '../entity/user';
-import { Repository } from 'typeorm';
+import { Repository, MoreThan, Between } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like } from 'typeorm';
 import { CONST } from '../config/constants';
@@ -54,10 +54,10 @@ export class ReportsService {
     let { startTime, endTime, address, username, page, limit } = query;
     let where = {};
     if (startTime) {
-      where['createdAt'] = { $gt: new Date(startTime * 1000) };
+      where['createdAt'] = MoreThan(new Date(startTime * 1000));
     }
     if (startTime && endTime) {
-      where['createdAt']['$lt'] = new Date(endTime * 1000);
+      where['createdAt'] = Between(new Date(startTime * 1000), new Date(endTime * 1000));
     }
     if (address) {
       where['address'] = Like(`%${address}%`);
@@ -72,7 +72,6 @@ export class ReportsService {
   }
 
   async reportList(where, page, limit) {
-    console.log(where);
     let reports = await this.reportRepository.find({
       where,
       take: limit,
