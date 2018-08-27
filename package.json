@@ -35,6 +35,7 @@
     "log4js": "^2.9.0",
     "mongo": "^0.1.0",
     "mysql": "^2.15.0",
+    "officegen": "^0.4.5",
     "qiniu": "^7.2.1",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.0.0",

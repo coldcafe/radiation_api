@@ -51,7 +51,7 @@ export class ReportsService {
   }
 
   reportQuery(userInfo: UserInfo, query: ReportListReq) {
-    let { startTime, endTime, address, username, page, limit } = query;
+    let { startTime, endTime, address, measurePerson, page, limit } = query;
     let where = {};
     if (startTime) {
       where['createdAt'] = MoreThan(new Date(startTime * 1000));
@@ -62,8 +62,8 @@ export class ReportsService {
     if (address) {
       where['address'] = Like(`%${address}%`);
     }
-    if (username) {
-      where['username'] = username;
+    if (measurePerson) {
+      where['measurePerson'] = measurePerson;
     }
     if (userInfo.role !== 'superadmin') {
       where['user'] = userInfo.id;
@@ -87,6 +87,35 @@ export class ReportsService {
       where,
     });
     return count;
+  }
+
+  async updateReport(reportDto: ReportDto) {
+    let report = new Report();
+    report.id = reportDto.id;
+    report.measurePerson = reportDto.measurePerson;
+    report.machineNO = reportDto.machineNO;
+    report.taskNO = reportDto.taskNO;
+    report.measuredAt = reportDto.measuredAt;
+    report.type = reportDto.type;
+    report.weather = reportDto.weather;
+    report.address = reportDto.address;
+    report.unit = reportDto.unit;
+    report.contactPerson = reportDto.contactPerson;
+    report.contactPersonTel = reportDto.contactPersonTel;
+    report.GPS = reportDto.GPS;
+    report.pictures = JSON.stringify(reportDto.pictures);
+    if (report.data) {
+
+    }
+    report.data = reportDto.data.map((item) => {
+      let reportData = new ReportData();
+      reportData.id = item.id;
+      reportData.measurePoint = item.measurePoint;
+      reportData.K = item.K;
+      reportData.values = item.values;
+      return reportData;
+    });
+    await report.save();
   }
 
 }

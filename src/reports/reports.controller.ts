@@ -19,6 +19,13 @@ export class ReportsController {
     await this.reportsService.createReport(userInfo.id, reportDto);
   }
 
+  @Put()
+  @Roles()
+  @ApiResponse({ status: 201 })
+  async updateReport(@Body() reportDto: ReportDto) {
+    await this.reportsService.updateReport(reportDto);
+  }
+
   @Get('/list')
   @Roles()
   @ApiResponse({ status: 200, type: ReportListDto })
@@ -42,7 +49,7 @@ export class ReportsController {
       reportDto.contactPersonTel = report.contactPersonTel;
       reportDto.GPS = report.GPS;
       reportDto.pictures = JSON.parse(report.pictures);
-      reportDto.data = report.data.map((item) => {
+      reportDto.data = report.data && report.data.map((item) => {
         let reportDataDto = new ReportDataDto();
         reportDataDto.id = item.id;
         reportDataDto.measurePoint = item.measurePoint;

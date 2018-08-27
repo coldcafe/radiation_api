@@ -85,8 +85,8 @@ export class ReportListReq {
 
   @IsString()
   @IsOptional()
-  @ApiModelProperty({ description: '用户名', required: false })
-  username: string;
+  @ApiModelProperty({ description: '测量人', required: false })
+  measurePerson: string;
 
   @IsInt()
   @IsOptional()
