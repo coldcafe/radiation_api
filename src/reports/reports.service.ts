@@ -105,6 +105,7 @@ export class ReportsService {
     report.contactPersonTel = reportDto.contactPersonTel;
     report.GPS = reportDto.GPS;
     report.pictures = reportDto.pictures ? JSON.stringify(reportDto.pictures) : '';
+    console.log(reportDto.data);
     report.data = reportDto.data ? reportDto.data.map((item) => {
       let reportData = new ReportData();
       reportData.id = item.id;
