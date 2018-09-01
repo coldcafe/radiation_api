@@ -8,11 +8,12 @@ import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './grards/roles.grards';
 import { User } from './entity/user';
 import { ReportsModule } from './reports/reports.module';
+import { QiniuService } from './qiniu.service';
 
 @Module({
-  imports: [ DatabaseModule, UsersModule, ReportsModule, TypeOrmModule.forFeature([User]) ],
-  controllers: [ AppController ],
-  providers: [ AppService, { provide: APP_GUARD, useClass: RolesGuard } ],
+  imports: [DatabaseModule, UsersModule, ReportsModule, TypeOrmModule.forFeature([User])],
+  controllers: [AppController],
+  providers: [AppService, QiniuService, { provide: APP_GUARD, useClass: RolesGuard }],
 })
 
-export class AppModule {}
+export class AppModule { }

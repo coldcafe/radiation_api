@@ -1,16 +1,18 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsString, IsInt, IsOptional } from 'class-validator';
+import { IsString, IsInt, IsOptional, IsNotEmpty } from 'class-validator';
 
 export class LoginReq {
 
   @IsString()
+  @IsNotEmpty()
   @ApiModelProperty()
-  readonly username: string;
+  username: string;
 
   @IsString()
+  @IsNotEmpty()
   @ApiModelProperty()
-  readonly password: string;
+  password: string;
 
 }
 export class LoginRes {
