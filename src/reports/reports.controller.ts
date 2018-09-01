@@ -48,15 +48,15 @@ export class ReportsController {
       reportDto.contactPerson = report.contactPerson;
       reportDto.contactPersonTel = report.contactPersonTel;
       reportDto.GPS = report.GPS;
-      reportDto.pictures = JSON.parse(report.pictures);
-      reportDto.data = report.data && report.data.map((item) => {
+      reportDto.pictures = report.pictures ? JSON.parse(report.pictures) : [];
+      reportDto.data = report.data ? report.data.map((item) => {
         let reportDataDto = new ReportDataDto();
         reportDataDto.id = item.id;
         reportDataDto.measurePoint = item.measurePoint;
         reportDataDto.K = item.K;
         reportDataDto.values = item.values;
         return reportDataDto;
-      });
+      }) : [];
       return reportDto;
     });
     return { reports: reportsDto, count };

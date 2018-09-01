@@ -39,14 +39,14 @@ export class ReportsService {
     report.contactPerson = reportDto.contactPerson;
     report.contactPersonTel = reportDto.contactPersonTel;
     report.GPS = reportDto.GPS;
-    report.pictures = JSON.stringify(reportDto.pictures);
-    report.data = reportDto.data.map((item) => {
+    report.pictures = reportDto.pictures ? JSON.stringify(reportDto.pictures) : '';
+    report.data = reportDto.data ? reportDto.data.map((item) => {
       let reportData = new ReportData();
       reportData.measurePoint = item.measurePoint;
       reportData.K = item.K;
       reportData.values = item.values;
       return reportData;
-    });
+    }) : [];
     await report.save();
   }
 
@@ -103,18 +103,15 @@ export class ReportsService {
     report.contactPerson = reportDto.contactPerson;
     report.contactPersonTel = reportDto.contactPersonTel;
     report.GPS = reportDto.GPS;
-    report.pictures = JSON.stringify(reportDto.pictures);
-    if (report.data) {
-
-    }
-    report.data = reportDto.data.map((item) => {
+    report.pictures = reportDto.pictures ? JSON.stringify(reportDto.pictures) : '';
+    report.data = reportDto.data ? reportDto.data.map((item) => {
       let reportData = new ReportData();
       reportData.id = item.id;
       reportData.measurePoint = item.measurePoint;
       reportData.K = item.K;
       reportData.values = item.values;
       return reportData;
-    });
+    }) : [];
     await report.save();
   }
 
