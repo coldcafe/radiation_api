@@ -48,6 +48,7 @@ export class ReportsService {
       return reportData;
     }) : [];
     await report.save();
+    return report;
   }
 
   reportQuery(userInfo: UserInfo, query: ReportListReq) {
@@ -113,6 +114,7 @@ export class ReportsService {
       return reportData;
     }) : [];
     await report.save();
+    return report;
   }
 
 }

@@ -14,16 +14,18 @@ export class ReportsController {
 
   @Post('/upload')
   @Roles()
-  @ApiResponse({ status: 201 })
+  @ApiResponse({ status: 201, type: ReportDto })
   async uploadReport(@UserInfo() userInfo, @Body() reportDto: ReportDto) {
-    await this.reportsService.createReport(userInfo.id, reportDto);
+    let report = await this.reportsService.createReport(userInfo.id, reportDto);
+    return report;
   }
 
   @Put()
   @Roles()
-  @ApiResponse({ status: 201 })
+  @ApiResponse({ status: 201, type: ReportDto })
   async updateReport(@Body() reportDto: ReportDto) {
-    await this.reportsService.updateReport(reportDto);
+    let report = await this.reportsService.updateReport(reportDto);
+    return report;
   }
 
   @Get('/list')
