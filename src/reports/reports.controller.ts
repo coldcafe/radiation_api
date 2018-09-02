@@ -65,6 +65,14 @@ export class ReportsController {
     return { reports: reportsDto, count };
   }
 
+  @Get('/sketchmap/list')
+  @Roles('superadmin')
+  @ApiResponse({ status: 201 })
+  async sketchMapList() {
+    let result = await this.reportsService.sketchMapList();
+    return result;
+  }
+
   @Post('/sketchmap')
   @Roles('superadmin')
   @ApiResponse({ status: 201 })

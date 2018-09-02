@@ -118,6 +118,11 @@ export class ReportsService {
     return report;
   }
 
+  async sketchMapList() {
+    let result = await this.sketchMapRepository.find();
+    return result;
+  }
+
   async addSketchMap(pic: string) {
     let sketchMap = new SketchMap();
     sketchMap.pic = pic;
