@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, Req, Request
 import { ReportsService } from './reports.service';
 import { User } from '../entity/user';
 import { ApiUseTags, ApiResponse } from '@nestjs/swagger';
-import { ReportDto, ReportListReq, ReportDataDto, ReportListDto } from './reports.dto';
+import { ReportDto, ReportListReq, ReportDataDto, ReportListDto, SketchMapDto } from './reports.dto';
 import { Roles } from '../grards/roles.grards';
 import { UserInfo } from '../decorators/userinfo';
 @ApiUseTags('reports')
@@ -50,6 +50,7 @@ export class ReportsController {
       reportDto.contactPerson = report.contactPerson;
       reportDto.contactPersonTel = report.contactPersonTel;
       reportDto.GPS = report.GPS;
+      reportDto.sketchMap = report.sketchMap;
       reportDto.pictures = report.pictures ? JSON.parse(report.pictures) : [];
       reportDto.data = report.data ? report.data.map((item) => {
         let reportDataDto = new ReportDataDto();
@@ -62,5 +63,19 @@ export class ReportsController {
       return reportDto;
     });
     return { reports: reportsDto, count };
+  }
+
+  @Post('/sketchmap')
+  @Roles('superadmin')
+  @ApiResponse({ status: 201 })
+  async addSketchMap(@Body() sketchMapDto: SketchMapDto) {
+    await this.reportsService.addSketchMap(sketchMapDto.pic);
+  }
+
+  @Delete('/sketchmap/:id')
+  @Roles('superadmin')
+  @ApiResponse({ status: 201 })
+  async removeSketchMap(@Param('id') id) {
+    await this.reportsService.removeSketchMap(parseInt(id, 10));
   }
 }

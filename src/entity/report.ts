@@ -1,60 +1,63 @@
-import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity, JoinColumn, OneToMany, ManyToOne} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity, JoinColumn, OneToMany, ManyToOne } from 'typeorm';
 import { ReportData } from './report_data';
 import { User } from './user';
 @Entity()
 export class Report extends BaseEntity {
 
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @ManyToOne(type => User, user => user.reports)
-    user: User;
+  @ManyToOne(type => User, user => user.reports)
+  user: User;
 
-    @Column()
-    measurePerson: string;
+  @Column()
+  measurePerson: string;
 
-    @Column()
-    machineNO: string;
+  @Column()
+  machineNO: string;
 
-    @Column()
-    taskNO: string;
+  @Column()
+  taskNO: string;
 
-    @Column()
-    measuredAt: number;
+  @Column()
+  measuredAt: number;
 
-    @Column()
-    type: string;
+  @Column()
+  type: string;
 
-    @Column()
-    weather: string;
+  @Column()
+  weather: string;
 
-    @Column()
-    address: string;
+  @Column()
+  address: string;
 
-    @Column()
-    unit: string;
+  @Column()
+  unit: string;
 
-    @Column()
-    contactPerson: string;
+  @Column()
+  contactPerson: string;
 
-    @Column()
-    contactPersonTel: string;
+  @Column()
+  contactPersonTel: string;
 
-    @Column()
-    GPS: string;
+  @Column()
+  GPS: string;
 
-    @Column()
-    pictures: string;
+  @Column()
+  sketchMap: string;
 
-    @OneToMany(type => ReportData, reportData => reportData.report, {
-        cascade: true,
-    })
-    data: ReportData[];
+  @Column()
+  pictures: string;
 
-    @CreateDateColumn({ type: 'timestamp' })
-    createdAt: Date;
+  @OneToMany(type => ReportData, reportData => reportData.report, {
+    cascade: true,
+  })
+  data: ReportData[];
 
-    @UpdateDateColumn({ type: 'timestamp' })
-    updatedAt: Date;
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 
 }

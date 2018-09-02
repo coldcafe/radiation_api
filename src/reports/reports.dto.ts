@@ -56,7 +56,10 @@ export class ReportDto {
   @ApiModelProperty({ description: 'GPS地址' })
   GPS: string;
 
-  @ApiModelProperty({ description: '照片, 上传七牛，传输七牛图片key到服务端保存', type: String, isArray: true })
+  @ApiModelProperty({ description: '点位示意图' })
+  sketchMap: string;
+
+  @ApiModelProperty({ description: '照片', type: String, isArray: true })
   pictures: string[];
 
   @ApiModelProperty({ description: '伽马剂量率记录表', type: ReportDataDto, isArray: true })
@@ -109,5 +112,12 @@ export class ReportListDto {
 
   @ApiModelProperty({ type: Number })
   count: number;
+
+}
+
+export class SketchMapDto {
+
+  @ApiModelProperty()
+  pic: string;
 
 }

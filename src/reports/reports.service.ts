@@ -3,14 +3,11 @@ import { User } from '../entity/user';
 import { Repository, MoreThan, Between } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like } from 'typeorm';
-import { CONST } from '../config/constants';
-import config from '../config';
-import axios from 'axios';
-import * as jwt from 'jsonwebtoken';
 import { Report } from '../entity/report';
 import { ReportData } from '../entity/report_data';
 import { ReportDto, ReportListReq } from './reports.dto';
 import { UserInfo } from '../users/users.interface';
+import { SketchMap } from '../entity/sketch_map';
 
 @Injectable()
 export class ReportsService {
@@ -21,6 +18,8 @@ export class ReportsService {
     private readonly reportRepository: Repository<Report>,
     @InjectRepository(ReportData)
     private readonly reportDataRepository: Repository<ReportData>,
+    @InjectRepository(SketchMap)
+    private readonly sketchMapRepository: Repository<SketchMap>,
   ) { }
 
   async createReport(userId: number, reportDto: ReportDto) {
@@ -39,6 +38,7 @@ export class ReportsService {
     report.contactPerson = reportDto.contactPerson;
     report.contactPersonTel = reportDto.contactPersonTel;
     report.GPS = reportDto.GPS;
+    report.sketchMap = reportDto.sketchMap;
     report.pictures = reportDto.pictures ? JSON.stringify(reportDto.pictures) : '';
     report.data = reportDto.data ? reportDto.data.map((item) => {
       let reportData = new ReportData();
@@ -104,8 +104,8 @@ export class ReportsService {
     report.contactPerson = reportDto.contactPerson;
     report.contactPersonTel = reportDto.contactPersonTel;
     report.GPS = reportDto.GPS;
+    report.sketchMap = reportDto.sketchMap;
     report.pictures = reportDto.pictures ? JSON.stringify(reportDto.pictures) : '';
-    console.log(reportDto.data);
     report.data = reportDto.data ? reportDto.data.map((item) => {
       let reportData = new ReportData();
       reportData.id = item.id;
@@ -116,6 +116,18 @@ export class ReportsService {
     }) : [];
     await report.save();
     return report;
+  }
+
+  async addSketchMap(pic: string) {
+    let sketchMap = new SketchMap();
+    sketchMap.pic = pic;
+    await sketchMap.save();
+  }
+
+  async removeSketchMap(id: number) {
+    let sketchMap = new SketchMap();
+    sketchMap.id = id;
+    await sketchMap.remove();
   }
 
 }
