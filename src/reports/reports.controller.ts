@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, Req, Request, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, Req, Request, Response, Query } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import { User } from '../entity/user';
 import { ApiUseTags, ApiResponse } from '@nestjs/swagger';
@@ -63,6 +63,18 @@ export class ReportsController {
       return reportDto;
     });
     return { reports: reportsDto, count };
+  }
+
+  @Get('/export/:id')
+  // @Roles()
+  @ApiResponse({ status: 200 })
+  async reportExport(@Param('id') id, @Response() res) {
+    res.writeHead(200, {
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'Content-disposition': 'attachment; filename=out.docx',
+    });
+    let docx = await this.reportsService.reportExport(id);
+    docx.generate(res);
   }
 
   @Get('/sketchmap/list')
