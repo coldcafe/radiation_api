@@ -66,7 +66,7 @@ export class ReportsController {
   }
 
   @Get('/export/:id')
-  // @Roles()
+  @Roles()
   @ApiResponse({ status: 200 })
   async reportExport(@Param('id') id, @Response() res) {
     res.writeHead(200, {
