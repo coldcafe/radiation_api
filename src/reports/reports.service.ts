@@ -43,6 +43,7 @@ export class ReportsService {
     report.GPS = reportDto.GPS;
     report.sketchMap = reportDto.sketchMap;
     report.pictures = reportDto.pictures ? JSON.stringify(reportDto.pictures) : '';
+    report.result = reportDto.result;
     report.data = reportDto.data ? reportDto.data.map((item) => {
       let reportData = new ReportData();
       reportData.measurePoint = item.measurePoint;
@@ -157,6 +158,7 @@ export class ReportsService {
     report.contactPersonTel = reportDto.contactPersonTel;
     report.GPS = reportDto.GPS;
     report.sketchMap = reportDto.sketchMap;
+    report.result = reportDto.result;
     report.pictures = reportDto.pictures ? JSON.stringify(reportDto.pictures) : '';
     report.data = reportDto.data ? reportDto.data.map((item) => {
       let reportData = new ReportData();
@@ -167,7 +169,7 @@ export class ReportsService {
       return reportData;
     }) : [];
     await report.save();
-    return report;
+    return this.reportRepository.findOne({ id: reportDto.id });
   }
 
   async sketchMapList() {

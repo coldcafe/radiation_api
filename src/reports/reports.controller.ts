@@ -21,7 +21,7 @@ export class ReportsController {
   }
 
   @Put()
-  @Roles()
+  // @Roles()
   @ApiResponse({ status: 201, type: ReportDto })
   async updateReport(@Body() reportDto: ReportDto) {
     let report = await this.reportsService.updateReport(reportDto);
@@ -51,6 +51,7 @@ export class ReportsController {
       reportDto.contactPersonTel = report.contactPersonTel;
       reportDto.GPS = report.GPS;
       reportDto.sketchMap = report.sketchMap;
+      reportDto.result = report.result;
       reportDto.pictures = report.pictures ? JSON.parse(report.pictures) : [];
       reportDto.data = report.data ? report.data.map((item) => {
         let reportDataDto = new ReportDataDto();

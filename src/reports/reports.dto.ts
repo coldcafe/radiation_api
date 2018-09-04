@@ -65,6 +65,9 @@ export class ReportDto {
   @ApiModelProperty({ description: '伽马剂量率记录表', type: ReportDataDto, isArray: true })
   data: ReportDataDto[];
 
+  @ApiModelProperty({ description: '结论' })
+  result: string;
+
 }
 
 export class ReportListReq {

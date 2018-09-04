@@ -49,6 +49,9 @@ export class Report extends BaseEntity {
   @Column()
   pictures: string;
 
+  @Column('text')
+  result: string;
+
   @OneToMany(type => ReportData, reportData => reportData.report, {
     cascade: true,
   })
