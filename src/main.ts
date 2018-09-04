@@ -2,7 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-import file_store from '../file_store';
+// tslint:disable-next-line:no-var-requires
+const file_store = require('../file_store');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

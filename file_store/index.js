@@ -30,5 +30,5 @@ var IndexRouter = require('./routes');
 app.use(mount('/', IndexRouter));
 app.use(koaStatic(path.join(__dirname, './public/')));
 
-exports.default = app.callback();
+module.exports = app.callback();
 
