@@ -10,7 +10,7 @@ var koaStatic = require('koa-static');
 
 global.C = {
   data: {
-    root: '/file_store'
+    root: path.join(__dirname, './public/files')
   },
   logger: require('tracer').console({ level: 'info' }),
   morganFormat: ':date[iso] :remote-addr :method :url :status :res[content-length] :response-time ms'
