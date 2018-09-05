@@ -86,7 +86,7 @@ export class ReportsService {
           let vals = values.map((value) => {
             let reg = /\d+\.?\d*/;
             let val = reg.exec(value);
-            return parseInt(val.toString(), 10);
+            return val ? parseInt(val.toString(), 10) : 0;
           });
           table.push([index, item.measurePoint, 10, _.min(vals) + '---' + _.max(vals), average, result]);
         });
