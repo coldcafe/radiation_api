@@ -108,10 +108,10 @@ export class ReportsService {
     let { startTime, endTime, address, measurePerson, page, limit } = query;
     let where = {};
     if (startTime) {
-      where['measuredAt'] = MoreThan(new Date(startTime * 1000));
+      where['measuredAt'] = MoreThan(startTime * 100);
     }
     if (startTime && endTime) {
-      where['measuredAt'] = Between(new Date(startTime * 1000), new Date(endTime * 1000));
+      where['measuredAt'] = Between(startTime, endTime * 1000);
     }
     if (address) {
       where['address'] = Like(`%${address}%`);
