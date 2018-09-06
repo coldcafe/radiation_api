@@ -34,6 +34,13 @@ export class UsersController {
     return user;
   }
 
+  @Delete('/:id')
+  @HttpCode(200)
+  @ApiResponse({ status: 200, type: UserDto })
+  async deleteUser(@Param('id') id) {
+    await this.usersService.delete(parseInt(id, 10));
+  }
+
   @Roles('superadmin')
   @Get('/list')
   @ApiResponse({ status: 200, type: UserListDto })

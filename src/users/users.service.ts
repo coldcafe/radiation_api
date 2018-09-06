@@ -65,6 +65,12 @@ export class UsersService {
     return this.userRepository.findOne({ id: userDto.id });
   }
 
+  async delete(id: number) {
+    let user = new User();
+    user.id = id;
+    await user.remove();
+  }
+
   async updateUserInfo(userIno: UpdateUserInoReq) {
     let user = await this.userRepository.findOne({ id: userIno.id });
     user.password = userIno.password;
