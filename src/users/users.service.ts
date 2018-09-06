@@ -43,7 +43,7 @@ export class UsersService {
     return token;
   }
 
-  async registor(username: string, password: string) {
+  async registor(username: string, password: string, role: string) {
     let _user = await this.userRepository.findOne({ username });
     if (_user) {
       throw new ForbiddenException('用户已存在');
@@ -51,7 +51,18 @@ export class UsersService {
     let user = new User();
     user.username = username;
     user.password = password;
+    user.role = role || 'user';
     await user.save();
+  }
+
+  async update(userDto: UserDto) {
+    let user = new User();
+    user.id = userDto.id;
+    user.username = userDto.username;
+    user.nickname = userDto.nickname;
+    user.role = userDto.role;
+    await user.save();
+    return this.userRepository.findOne({ id: userDto.id });
   }
 
   async updateUserInfo(userIno: UpdateUserInoReq) {

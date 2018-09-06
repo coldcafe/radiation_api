@@ -23,7 +23,15 @@ export class UsersController {
   @HttpCode(204)
   @ApiResponse({ status: 204 })
   async registor(@Body() registerReq: RegisterReq) {
-    await this.usersService.registor(registerReq.username, registerReq.password);
+    await this.usersService.registor(registerReq.username, registerReq.password, registerReq.role);
+  }
+
+  @Put()
+  @HttpCode(200)
+  @ApiResponse({ status: 200, type: UserDto })
+  async updateUser(@Body() UserDto: UserDto) {
+    let user = await this.usersService.update(UserDto);
+    return user;
   }
 
   @Roles('superadmin')
