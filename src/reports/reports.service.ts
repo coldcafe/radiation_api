@@ -44,13 +44,15 @@ export class ReportsService {
     report.sketchMap = reportDto.sketchMap;
     report.pictures = reportDto.pictures ? JSON.stringify(reportDto.pictures) : '';
     report.result = reportDto.result;
-    report.data = reportDto.data ? reportDto.data.map((item) => {
-      let reportData = new ReportData();
-      reportData.measurePoint = item.measurePoint;
-      reportData.K = item.K;
-      reportData.values = item.values;
-      return reportData;
-    }) : [];
+    if (report.data) {
+      report.data = reportDto.data.map((item) => {
+        let reportData = new ReportData();
+        reportData.measurePoint = item.measurePoint;
+        reportData.K = item.K;
+        reportData.values = item.values;
+        return reportData;
+      });
+    }
     await report.save();
     return report;
   }
@@ -66,6 +68,7 @@ export class ReportsService {
       docx.on('error', (err) => {
         console.log(err);
       });
+
       let table: any = [
         [{ val: '项目名称' }, { val: 'xxx', opts: { gridSpan: 5 } }],
         [{ val: '测量地址' }, { val: report.address, opts: { gridSpan: 5 } }],
@@ -160,16 +163,18 @@ export class ReportsService {
     report.sketchMap = reportDto.sketchMap;
     report.result = reportDto.result;
     report.pictures = reportDto.pictures ? JSON.stringify(reportDto.pictures) : '';
-    report.data = reportDto.data ? reportDto.data.map((item) => {
-      let reportData = new ReportData();
-      reportData.id = item.id;
-      reportData.measurePoint = item.measurePoint;
-      reportData.K = item.K;
-      reportData.values = item.values;
-      return reportData;
-    }) : [];
+    if (reportDto.data) {
+      report.data = reportDto.data.map((item) => {
+        let reportData = new ReportData();
+        reportData.id = item.id;
+        reportData.measurePoint = item.measurePoint;
+        reportData.K = item.K;
+        reportData.values = item.values;
+        return reportData;
+      });
+    }
     await report.save();
-    return this.reportRepository.findOne({ id: reportDto.id });
+    return this.reportRepository.findOne({ where: { id: reportDto.id }, relations: ['data'] });
   }
 
   async sketchMapList() {
