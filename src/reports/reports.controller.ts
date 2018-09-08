@@ -21,10 +21,34 @@ export class ReportsController {
   }
 
   @Put()
-  // @Roles()
+  @Roles()
   @ApiResponse({ status: 201, type: ReportDto })
   async updateReport(@Body() reportDto: ReportDto) {
     let report = await this.reportsService.updateReport(reportDto);
+    reportDto.id = report.id;
+    reportDto.measurePerson = report.measurePerson;
+    reportDto.machineNO = report.machineNO;
+    reportDto.taskNO = report.taskNO;
+    reportDto.measuredAt = report.measuredAt;
+    reportDto.type = report.type;
+    reportDto.weather = report.weather;
+    reportDto.address = report.address;
+    reportDto.unit = report.unit;
+    reportDto.contactPerson = report.contactPerson;
+    reportDto.contactPersonTel = report.contactPersonTel;
+    reportDto.GPS = report.GPS;
+    reportDto.sketchMap = report.sketchMap;
+    reportDto.result = report.result;
+    reportDto.pictures = report.pictures ? JSON.parse(report.pictures) : [];
+    reportDto.data = report.data ? report.data.map((item) => {
+      let reportDataDto = new ReportDataDto();
+      reportDataDto.id = item.id;
+      reportDataDto.measurePoint = item.measurePoint;
+      reportDataDto.K = item.K;
+      reportDataDto.values = item.values;
+      return reportDataDto;
+    }) : [];
+    return reportDto;
     return report;
   }
 
