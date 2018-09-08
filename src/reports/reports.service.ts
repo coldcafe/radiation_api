@@ -11,6 +11,15 @@ import { ReportData } from '../entity/report_data';
 import { ReportDto, ReportListReq } from './reports.dto';
 import { UserInfo } from '../users/users.interface';
 import { SketchMap } from '../entity/sketch_map';
+import * as moment from 'moment';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as JSZip from 'jszip';
+import * as Docxtemplater from 'docxtemplater';
+
+// Load the docx file as a binary
+let tempbin = fs.readFileSync(path.resolve(__dirname, '../../', 'temp.docx'), 'binary');
+let tempDoc = new JSZip(tempbin);
 
 @Injectable()
 export class ReportsService {
@@ -44,7 +53,7 @@ export class ReportsService {
     report.sketchMap = reportDto.sketchMap;
     report.pictures = reportDto.pictures ? JSON.stringify(reportDto.pictures) : '';
     report.result = reportDto.result;
-    if (report.data) {
+    if (reportDto.data) {
       report.data = reportDto.data.map((item) => {
         let reportData = new ReportData();
         reportData.measurePoint = item.measurePoint;
@@ -63,25 +72,26 @@ export class ReportsService {
         where: { id },
         relations: ['data'],
       });
-      let docx = officegen('docx');
 
-      docx.on('error', (err) => {
-        console.log(err);
-      });
+      let doc = new Docxtemplater();
+      doc.loadZip(tempDoc);
 
-      let table: any = [
-        [{ val: '项目名称' }, { val: 'xxx', opts: { gridSpan: 5 } }],
-        [{ val: '测量地址' }, { val: report.address, opts: { gridSpan: 5 } }],
-        [{ val: '联系人' }, { val: report.contactPerson, opts: { gridSpan: 2 } }, { val: '联系人' }, { val: report.contactPerson, opts: { gridSpan: 2 } }],
-        [{ val: '天气状况' }, { val: report.weather, opts: { gridSpan: 2 } }, { val: '天气状况' }, { val: report.weather, opts: { gridSpan: 2 } }],
-        [{ val: '检测类别' }, { val: report.type, opts: { gridSpan: 2 } }, { val: '检测单位' }, { val: report.unit, opts: { gridSpan: 2 } }],
-        [{ val: '监测标准' }, { val: 'XXX', opts: { gridSpan: 2 } }, { val: '监测仪器' }, { val: report.machineNO, opts: { gridSpan: 2 } }],
-        [{ val: '监测项目' }, { val: 'XXX', opts: { gridSpan: 5 } }],
-        [{ val: '监   测   结   果', opts: { gridSpan: 6 } }],
-        ['监测点编号', '监测点位', '测点数', '测值范围', '平均值', '测量结果'],
-      ];
-      if (report.data && report.data.length > 0) {
-        report.data.forEach((item, index) => {
+      // set the templateVariables
+      let data = {
+        date: moment().format('YYYY年 MM月 DD日'),
+        name: 'XXX',
+        address: report.address,
+        contactPerson: report.contactPerson,
+        contactPersonTel: report.contactPersonTel,
+        weather: report.weather,
+        measurePerson: report.measurePerson,
+        checkPerson: '',
+        measuredAt: moment(new Date(report.measuredAt * 1000)).format('YYYY年 MM月 DD日'),
+        type: report.type,
+        unit: report.unit,
+        machineNO: report.machineNO,
+        remark: '',
+        data: report.data.map((item, index) => {
           let values: string[] = item.values.split(',');
           let average = values[10];
           let result = values[12];
@@ -91,16 +101,21 @@ export class ReportsService {
             let val = reg.exec(value);
             return val ? parseInt(val.toString(), 10) : 0;
           });
-          table.push([index, item.measurePoint, 10, _.min(vals) + '---' + _.max(vals), average, result]);
-        });
-      }
-      let tableStyle = {
-        tableColWidth: 4261,
-        tableAlign: 'center',
-        borders: true,
+          return {
+            No: index,
+            measurePoint: item.measurePoint,
+            n: 10,
+            min: _.min(vals),
+            max: _.max(vals),
+            average,
+            result,
+          };
+        }),
       };
-      docx.createTable(table, tableStyle);
-      return docx;
+      doc.setData(data);
+      doc.render();
+      let buf = doc.getZip().generate({ type: 'nodebuffer' });
+      return buf;
     } catch (error) {
       console.error(error);
     }
@@ -147,6 +162,9 @@ export class ReportsService {
   }
 
   async updateReport(reportDto: ReportDto) {
+    if (reportDto.id) {
+      new Error('no id');
+    }
     let report = new Report();
     report.id = reportDto.id;
     report.measurePerson = reportDto.measurePerson;
