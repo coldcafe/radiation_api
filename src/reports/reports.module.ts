@@ -6,9 +6,10 @@ import { User } from '../entity/user';
 import { ReportData } from '../entity/report_data';
 import { Report } from '../entity/report';
 import { SketchMap } from '../entity/sketch_map';
+import { DocTemp } from '../entity/doc_temp';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Report, ReportData, SketchMap])],
+  imports: [TypeOrmModule.forFeature([User, Report, ReportData, SketchMap, DocTemp])],
   controllers: [ReportsController],
   providers: [
     ReportsService,

@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Like } from 'typeorm';
 import { Report } from '../entity/report';
 import { ReportData } from '../entity/report_data';
-import { ReportDto, ReportListReq } from './reports.dto';
+import { ReportDto, ReportListReq, DocTempDto } from './reports.dto';
 import { UserInfo } from '../users/users.interface';
 import { SketchMap } from '../entity/sketch_map';
 import * as moment from 'moment';
@@ -14,6 +14,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as JSZip from 'jszip';
 import * as Docxtemplater from 'docxtemplater';
+import { DocTemp } from '../entity/doc_temp';
 
 // Load the docx file as a binary
 let tempbin = fs.readFileSync(path.resolve(__dirname, '../../', 'temp.docx'), 'binary');
@@ -30,6 +31,8 @@ export class ReportsService {
     private readonly reportDataRepository: Repository<ReportData>,
     @InjectRepository(SketchMap)
     private readonly sketchMapRepository: Repository<SketchMap>,
+    @InjectRepository(DocTemp)
+    private readonly docTempRepository: Repository<DocTemp>,
   ) { }
 
   async createReport(userId: number, reportDto: ReportDto) {
@@ -210,4 +213,24 @@ export class ReportsService {
     await sketchMap.remove();
   }
 
+  async docTempList() {
+    let result = await this.docTempRepository.find();
+    return result;
+  }
+
+  async addDocTemp(docTempDto: DocTempDto) {
+    let docTemp = new DocTemp();
+    docTemp.title = docTempDto.title;
+    docTemp.address = docTempDto.address;
+    docTemp.tel = docTempDto.tel;
+    docTemp.facsimile = docTempDto.facsimile;
+    docTemp.email = docTempDto.email;
+    await docTemp.save();
+  }
+
+  async removeDocTemp(id: number) {
+    let docTemp = new DocTemp();
+    docTemp.id = id;
+    await docTemp.remove();
+  }
 }

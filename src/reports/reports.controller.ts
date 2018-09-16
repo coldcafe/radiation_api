@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, Req, Request
 import { ReportsService } from './reports.service';
 import * as fs from 'fs';
 import { ApiUseTags, ApiResponse } from '@nestjs/swagger';
-import { ReportDto, ReportListReq, ReportDataDto, ReportListDto, SketchMapDto } from './reports.dto';
+import { ReportDto, ReportListReq, ReportDataDto, ReportListDto, SketchMapDto, DocTempDto } from './reports.dto';
 import { Roles } from '../grards/roles.grards';
 import { UserInfo } from '../decorators/userinfo';
 @ApiUseTags('reports')
@@ -121,5 +121,27 @@ export class ReportsController {
   @ApiResponse({ status: 201 })
   async removeSketchMap(@Param('id') id) {
     await this.reportsService.removeSketchMap(parseInt(id, 10));
+  }
+
+  @Get('/doctemp/list')
+  @Roles()
+  @ApiResponse({ status: 200, type: DocTempDto, isArray: true })
+  async docTempList() {
+    let result = await this.reportsService.docTempList();
+    return result;
+  }
+
+  @Post('/doctemp')
+  @Roles('superadmin')
+  @ApiResponse({ status: 201 })
+  async addDocTemp(@Body() docTempDto: DocTempDto) {
+    await this.reportsService.addDocTemp(docTempDto);
+  }
+
+  @Delete('/doctemp/:id')
+  @Roles('superadmin')
+  @ApiResponse({ status: 201 })
+  async removeDocTemp(@Param('id') id) {
+    await this.reportsService.removeDocTemp(parseInt(id, 10));
   }
 }

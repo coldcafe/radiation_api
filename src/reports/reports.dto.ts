@@ -124,3 +124,25 @@ export class SketchMapDto {
   pic: string;
 
 }
+
+export class DocTempDto {
+
+  @ApiModelProperty()
+  id: number;
+
+  @ApiModelProperty()
+  title: string;
+
+  @ApiModelProperty()
+  address: string;
+
+  @ApiModelProperty()
+  tel: string;
+
+  @ApiModelProperty()
+  facsimile: string;
+
+  @ApiModelProperty()
+  email: string;
+
+}
