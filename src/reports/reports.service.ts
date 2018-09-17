@@ -27,7 +27,6 @@ let imageModule = new ImageModule({
     return fs.readFileSync(tagValue);
   },
   getSize: (img, tagValue, tagName) => {
-    console.log(img);
     return [500, 500];
   },
 });
@@ -118,6 +117,7 @@ export class ReportsService {
         unit: report.unit,
         machineNO: report.machineNO,
         remark: '',
+        result: report.result,
         data: report.data.map((item, index) => {
           let values: string[] = item.values.split(',');
           let average = values[10];
