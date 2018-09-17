@@ -47,6 +47,9 @@ export class Report extends BaseEntity {
   sketchMap: string;
 
   @Column()
+  docTempId: number;
+
+  @Column()
   pictures: string;
 
   @Column('text')

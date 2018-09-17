@@ -14,11 +14,23 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as JSZip from 'jszip';
 import * as Docxtemplater from 'docxtemplater';
+import * as ImageModule from 'docxtemplater-image-module';
 import { DocTemp } from '../entity/doc_temp';
 
 // Load the docx file as a binary
 let tempbin = fs.readFileSync(path.resolve(__dirname, '../../', 'temp.docx'), 'binary');
 let tempDoc = new JSZip(tempbin);
+
+let imageModule = new ImageModule({
+  centered: false,
+  getImage: (tagValue, tagName) => {
+    return fs.readFileSync(tagValue);
+  },
+  getSize: (img, tagValue, tagName) => {
+    console.log(img);
+    return [500, 500];
+  },
+});
 
 @Injectable()
 export class ReportsService {
@@ -68,17 +80,31 @@ export class ReportsService {
   }
 
   async reportExport(id: number) {
-    try {
-      let report = await this.reportRepository.findOne({
-        where: { id },
-        relations: ['data'],
-      });
 
+    let report = await this.reportRepository.findOne({
+      where: { id },
+      relations: ['data'],
+    });
+
+    if (!report.docTempId) {
+      throw new Error('no docTempId');
+    }
+    let docTemp = await this.docTempRepository.findOne({ id: report.docTempId });
+    if (!docTemp) {
+      throw new Error('no docTemp');
+    }
+    try {
       let doc = new Docxtemplater();
+      doc.attachModule(imageModule);
       doc.loadZip(tempDoc);
 
       // set the templateVariables
       let data = {
+        main_title: docTemp.title,
+        main_address: docTemp.address,
+        main_tel: docTemp.tel,
+        main_facsimile: docTemp.facsimile,
+        main_email: docTemp.email,
         date: moment().format('YYYY年 MM月 DD日'),
         name: 'XXX',
         address: report.address,
@@ -112,6 +138,7 @@ export class ReportsService {
             result,
           };
         }),
+        sketchMap: path.join(__dirname, '../../file_store/public', report.sketchMap),
       };
       doc.setData(data);
       doc.render();

@@ -59,6 +59,9 @@ export class ReportDto {
   @ApiModelProperty({ description: '点位示意图' })
   sketchMap: string;
 
+  @ApiModelProperty({ description: '文档模板ID' })
+  docTempId: number;
+
   @ApiModelProperty({ description: '照片', type: String, isArray: true })
   pictures: string[];
 
