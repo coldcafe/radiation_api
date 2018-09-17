@@ -26,6 +26,7 @@ export class ReportsController {
   async updateReport(@Body() reportDto: ReportDto) {
     let report = await this.reportsService.updateReport(reportDto);
     reportDto.id = report.id;
+    reportDto.name = report.name;
     reportDto.measurePerson = report.measurePerson;
     reportDto.machineNO = report.machineNO;
     reportDto.taskNO = report.taskNO;
@@ -39,9 +40,6 @@ export class ReportsController {
     reportDto.GPS = report.GPS;
     reportDto.sketchMap = report.sketchMap;
     reportDto.docTempId = report.docTempId;
-    reportDto.projectName = report.projectName;
-    reportDto.projectNo = report.projectNo;
-    reportDto.projectUnit = report.projectUnit;
     reportDto.result = report.result;
     reportDto.pictures = report.pictures ? JSON.parse(report.pictures) : [];
     reportDto.data = report.data ? report.data.map((item) => {
@@ -66,6 +64,7 @@ export class ReportsController {
     let reportsDto = reports.map((report) => {
       let reportDto = new ReportDto();
       reportDto.id = report.id;
+      reportDto.name = report.name;
       reportDto.measurePerson = report.measurePerson;
       reportDto.machineNO = report.machineNO;
       reportDto.taskNO = report.taskNO;
@@ -79,9 +78,6 @@ export class ReportsController {
       reportDto.GPS = report.GPS;
       reportDto.sketchMap = report.sketchMap;
       reportDto.docTempId = report.docTempId;
-      reportDto.projectName = report.projectName;
-      reportDto.projectNo = report.projectNo;
-      reportDto.projectUnit = report.projectUnit;
       reportDto.result = report.result;
       reportDto.pictures = report.pictures ? JSON.parse(report.pictures) : [];
       reportDto.data = report.data ? report.data.map((item) => {

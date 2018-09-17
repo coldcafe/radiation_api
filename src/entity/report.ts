@@ -11,6 +11,9 @@ export class Report extends BaseEntity {
   user: User;
 
   @Column()
+  name: string;
+
+  @Column()
   measurePerson: string;
 
   @Column()
@@ -48,15 +51,6 @@ export class Report extends BaseEntity {
 
   @Column()
   docTempId: number;
-
-  @Column()
-  projectName: string;
-
-  @Column()
-  projectNo: string;
-
-  @Column()
-  projectUnit: string;
 
   @Column()
   pictures: string;

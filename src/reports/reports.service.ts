@@ -51,6 +51,7 @@ export class ReportsService {
     let user = new User();
     user.id = userId;
     report.user = user;
+    report.name = reportDto.name;
     report.measurePerson = reportDto.measurePerson;
     report.machineNO = reportDto.machineNO;
     report.taskNO = reportDto.taskNO;
@@ -66,9 +67,6 @@ export class ReportsService {
     report.docTempId = reportDto.docTempId;
     report.pictures = reportDto.pictures ? JSON.stringify(reportDto.pictures) : '';
     report.result = reportDto.result;
-    report.projectName = reportDto.projectName;
-    report.projectNo = reportDto.projectNo;
-    report.projectUnit = reportDto.projectUnit;
     if (reportDto.data) {
       report.data = reportDto.data.map((item) => {
         let reportData = new ReportData();
@@ -83,8 +81,13 @@ export class ReportsService {
   }
 
   async removeReport(id: number) {
-    let report = new Report();
-    report.id = id;
+    let report = await this.reportRepository.findOne({
+      where: { id },
+      relations: ['data'],
+    });
+    for (let item of report.data) {
+      await item.remove();
+    }
     await report.remove();
   }
 
@@ -114,11 +117,8 @@ export class ReportsService {
         main_tel: docTemp.tel,
         main_facsimile: docTemp.facsimile,
         main_email: docTemp.email,
-        projectName: report.projectName,
-        projectNo: report.projectNo,
-        projectUnit: report.projectUnit,
         date: moment().format('YYYY年 MM月 DD日'),
-        name: 'XXX',
+        name: report.name,
         address: report.address,
         contactPerson: report.contactPerson,
         contactPersonTel: report.contactPersonTel,
@@ -208,6 +208,7 @@ export class ReportsService {
     }
     let report = new Report();
     report.id = reportDto.id;
+    report.name = reportDto.name;
     report.measurePerson = reportDto.measurePerson;
     report.machineNO = reportDto.machineNO;
     report.taskNO = reportDto.taskNO;
@@ -221,9 +222,6 @@ export class ReportsService {
     report.GPS = reportDto.GPS;
     report.sketchMap = reportDto.sketchMap;
     report.docTempId = reportDto.docTempId;
-    report.projectName = reportDto.projectName;
-    report.projectNo = reportDto.projectNo;
-    report.projectUnit = reportDto.projectUnit;
     report.result = reportDto.result;
     report.pictures = reportDto.pictures ? JSON.stringify(reportDto.pictures) : '';
     if (reportDto.data) {
