@@ -50,6 +50,15 @@ export class Report extends BaseEntity {
   docTempId: number;
 
   @Column()
+  projectName: string;
+
+  @Column()
+  projectNo: string;
+
+  @Column()
+  projectUnit: string;
+
+  @Column()
   pictures: string;
 
   @Column('text')

@@ -63,8 +63,12 @@ export class ReportsService {
     report.contactPersonTel = reportDto.contactPersonTel;
     report.GPS = reportDto.GPS;
     report.sketchMap = reportDto.sketchMap;
+    report.docTempId = reportDto.docTempId;
     report.pictures = reportDto.pictures ? JSON.stringify(reportDto.pictures) : '';
     report.result = reportDto.result;
+    report.projectName = reportDto.projectName;
+    report.projectNo = reportDto.projectNo;
+    report.projectUnit = reportDto.projectUnit;
     if (reportDto.data) {
       report.data = reportDto.data.map((item) => {
         let reportData = new ReportData();
@@ -76,6 +80,12 @@ export class ReportsService {
     }
     await report.save();
     return report;
+  }
+
+  async removeReport(id: number) {
+    let report = new Report();
+    report.id = id;
+    await report.remove();
   }
 
   async reportExport(id: number) {
@@ -104,6 +114,9 @@ export class ReportsService {
         main_tel: docTemp.tel,
         main_facsimile: docTemp.facsimile,
         main_email: docTemp.email,
+        projectName: report.projectName,
+        projectNo: report.projectNo,
+        projectUnit: report.projectUnit,
         date: moment().format('YYYY年 MM月 DD日'),
         name: 'XXX',
         address: report.address,
@@ -207,6 +220,10 @@ export class ReportsService {
     report.contactPersonTel = reportDto.contactPersonTel;
     report.GPS = reportDto.GPS;
     report.sketchMap = reportDto.sketchMap;
+    report.docTempId = reportDto.docTempId;
+    report.projectName = reportDto.projectName;
+    report.projectNo = reportDto.projectNo;
+    report.projectUnit = reportDto.projectUnit;
     report.result = reportDto.result;
     report.pictures = reportDto.pictures ? JSON.stringify(reportDto.pictures) : '';
     if (reportDto.data) {

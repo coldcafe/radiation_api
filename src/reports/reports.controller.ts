@@ -38,6 +38,10 @@ export class ReportsController {
     reportDto.contactPersonTel = report.contactPersonTel;
     reportDto.GPS = report.GPS;
     reportDto.sketchMap = report.sketchMap;
+    reportDto.docTempId = report.docTempId;
+    reportDto.projectName = report.projectName;
+    reportDto.projectNo = report.projectNo;
+    reportDto.projectUnit = report.projectUnit;
     reportDto.result = report.result;
     reportDto.pictures = report.pictures ? JSON.parse(report.pictures) : [];
     reportDto.data = report.data ? report.data.map((item) => {
@@ -74,6 +78,10 @@ export class ReportsController {
       reportDto.contactPersonTel = report.contactPersonTel;
       reportDto.GPS = report.GPS;
       reportDto.sketchMap = report.sketchMap;
+      reportDto.docTempId = report.docTempId;
+      reportDto.projectName = report.projectName;
+      reportDto.projectNo = report.projectNo;
+      reportDto.projectUnit = report.projectUnit;
       reportDto.result = report.result;
       reportDto.pictures = report.pictures ? JSON.parse(report.pictures) : [];
       reportDto.data = report.data ? report.data.map((item) => {
@@ -89,8 +97,15 @@ export class ReportsController {
     return { reports: reportsDto, count };
   }
 
+  @Delete('/:id')
+  @Roles('superadmin')
+  @ApiResponse({ status: 200 })
+  async removeReport(@Param('id') id) {
+    await this.reportsService.removeReport(parseInt(id, 10));
+  }
+
   @Get('/export/:id')
-  // @Roles()
+  @Roles()
   @ApiResponse({ status: 200 })
   async reportExport(@Param('id') id, @Response() res) {
     let doc = await this.reportsService.reportExport(id);

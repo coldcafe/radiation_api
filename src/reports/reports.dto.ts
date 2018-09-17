@@ -62,6 +62,15 @@ export class ReportDto {
   @ApiModelProperty({ description: '文档模板ID' })
   docTempId: number;
 
+  @ApiModelProperty({ description: '项目名称' })
+  projectName: string;
+
+  @ApiModelProperty({ description: '项目号' })
+  projectNo: string;
+
+  @ApiModelProperty({ description: '项目单位' })
+  projectUnit: string;
+
   @ApiModelProperty({ description: '照片', type: String, isArray: true })
   pictures: string[];
 
