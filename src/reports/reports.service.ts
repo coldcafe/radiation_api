@@ -138,7 +138,7 @@ export class ReportsService {
             result,
           };
         }),
-        sketchMap: path.join(__dirname, '../../file_store/public', report.sketchMap),
+        sketchMap: path.join(__dirname, '../../file_store/public/files', report.sketchMap),
       };
       doc.setData(data);
       doc.render();
