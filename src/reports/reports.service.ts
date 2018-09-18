@@ -85,6 +85,7 @@ export class ReportsService {
       where: { id },
       relations: ['data'],
     });
+    if (!report) return;
     for (let item of report.data) {
       await item.remove();
     }
