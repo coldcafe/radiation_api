@@ -106,7 +106,7 @@ export class ReportsController {
   @Roles()
   @ApiResponse({ status: 200 })
   async reportExport(@Param('id') id, @Response() res) {
-    let doc = await this.reportsService.reportExport(id);
+    let doc = await this.reportsService.reportExport(parseInt(id, 10));
     res.writeHead(200, {
       'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       'Content-disposition': 'attachment; filename=out.docx',
