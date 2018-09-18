@@ -27,6 +27,7 @@ let imageModule = new ImageModule({
     return fs.readFileSync(tagValue);
   },
   getSize: (img, tagValue, tagName) => {
+    console.log(img);
     return [500, 500];
   },
 });
