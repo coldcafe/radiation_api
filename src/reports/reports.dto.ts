@@ -23,8 +23,11 @@ export class ReportDto {
   @ApiModelProperty()
   id: number;
 
-  @ApiModelProperty()
+  @ApiModelProperty({ description: '项目名称' })
   name: string;
+
+  @ApiModelProperty({ description: '委托单位' })
+  delegateUnit: string;
 
   @ApiModelProperty({ description: '测量人' })
   measurePerson: string;

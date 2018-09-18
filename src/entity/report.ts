@@ -14,6 +14,9 @@ export class Report extends BaseEntity {
   name: string;
 
   @Column()
+  delegateUnit: string;
+
+  @Column()
   measurePerson: string;
 
   @Column()

@@ -27,6 +27,7 @@ export class ReportsController {
     let report = await this.reportsService.updateReport(reportDto);
     reportDto.id = report.id;
     reportDto.name = report.name;
+    reportDto.delegateUnit = report.delegateUnit;
     reportDto.measurePerson = report.measurePerson;
     reportDto.machineNO = report.machineNO;
     reportDto.taskNO = report.taskNO;
@@ -65,6 +66,7 @@ export class ReportsController {
       let reportDto = new ReportDto();
       reportDto.id = report.id;
       reportDto.name = report.name;
+      reportDto.delegateUnit = report.delegateUnit;
       reportDto.measurePerson = report.measurePerson;
       reportDto.machineNO = report.machineNO;
       reportDto.taskNO = report.taskNO;
@@ -101,7 +103,7 @@ export class ReportsController {
   }
 
   @Get('/export/:id')
-  // @Roles()
+  @Roles()
   @ApiResponse({ status: 200 })
   async reportExport(@Param('id') id, @Response() res) {
     let doc = await this.reportsService.reportExport(id);

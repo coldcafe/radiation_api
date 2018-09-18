@@ -27,7 +27,6 @@ let imageModule = new ImageModule({
     return fs.readFileSync(tagValue);
   },
   getSize: (img, tagValue, tagName) => {
-    console.log(img);
     return [500, 500];
   },
 });
@@ -53,6 +52,7 @@ export class ReportsService {
     user.id = userId;
     report.user = user;
     report.name = reportDto.name;
+    report.delegateUnit = reportDto.delegateUnit;
     report.measurePerson = reportDto.measurePerson;
     report.machineNO = reportDto.machineNO;
     report.taskNO = reportDto.taskNO;
@@ -121,6 +121,8 @@ export class ReportsService {
         main_email: docTemp.email,
         date: moment().format('YYYY年 MM月 DD日'),
         name: report.name,
+        taskNO: report.taskNO,
+        delegateUnit: report.delegateUnit,
         address: report.address,
         contactPerson: report.contactPerson,
         contactPersonTel: report.contactPersonTel,
@@ -211,6 +213,7 @@ export class ReportsService {
     let report = new Report();
     report.id = reportDto.id;
     report.name = reportDto.name;
+    report.delegateUnit = reportDto.delegateUnit;
     report.measurePerson = reportDto.measurePerson;
     report.machineNO = reportDto.machineNO;
     report.taskNO = reportDto.taskNO;
