@@ -19,7 +19,6 @@ import { DocTemp } from '../entity/doc_temp';
 
 // Load the docx file as a binary
 let tempbin = fs.readFileSync(path.resolve(__dirname, '../../', 'temp.docx'), 'binary');
-let tempDoc = new JSZip(tempbin);
 
 let imageModule = new ImageModule({
   centered: false,
@@ -110,7 +109,7 @@ export class ReportsService {
     try {
       let doc = new Docxtemplater();
       doc.attachModule(imageModule);
-      doc.loadZip(tempDoc);
+      doc.loadZip(new JSZip(tempbin));
 
       // set the templateVariables
       let data = {

@@ -103,7 +103,7 @@ export class ReportsController {
   }
 
   @Get('/export/:id')
-  // @Roles()
+  @Roles()
   @ApiResponse({ status: 200 })
   async reportExport(@Param('id') id, @Response() res) {
     let doc = await this.reportsService.reportExport(parseInt(id, 10));
