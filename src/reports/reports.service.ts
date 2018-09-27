@@ -156,6 +156,18 @@ export class ReportsService {
         }),
         sketchMap: path.join(__dirname, '../../file_store/public/files', report.sketchMap),
       };
+      if (data.machineNO.indexOf('α-β')) {
+        data['projectType'] = 'α-β表面污染';
+        data['resultTitle'] = 'α-β  表  面  污  染  监  测  结  果';
+      }
+      if (data.machineNO.indexOf('X-γ')) {
+        data['projectType'] = 'X-γ剂量率';
+        data['resultTitle'] = 'X-γ  剂  量  率  监  测  结  果';
+      }
+      if (data.machineNO.indexOf('中子')) {
+        data['projectType'] = '中子剂量率';
+        data['resultTitle'] = '中 子 剂  量  率  监  测  结   果';
+      }
       doc.setData(data);
       doc.render();
       let buf = doc.getZip().generate({ type: 'nodebuffer' });
@@ -227,7 +239,9 @@ export class ReportsService {
     report.sketchMap = reportDto.sketchMap;
     report.docTempId = reportDto.docTempId;
     report.result = reportDto.result;
-    report.pictures = reportDto.pictures ? JSON.stringify(reportDto.pictures) : '';
+    if (reportDto.pictures) {
+      report.pictures = JSON.stringify(reportDto.pictures);
+    }
     if (reportDto.data) {
       report.data = reportDto.data.map((item) => {
         let reportData = new ReportData();
