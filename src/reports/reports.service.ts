@@ -156,15 +156,15 @@ export class ReportsService {
         }),
         sketchMap: path.join(__dirname, '../../file_store/public/files', report.sketchMap),
       };
-      if (data.machineNO.indexOf('α-β')) {
+      if (data.machineNO.indexOf('α-β') >= 0) {
         data['projectType'] = 'α-β表面污染';
         data['resultTitle'] = 'α-β  表  面  污  染  监  测  结  果';
       }
-      if (data.machineNO.indexOf('X-γ')) {
+      if (data.machineNO.indexOf('X-γ') >= 0) {
         data['projectType'] = 'X-γ剂量率';
         data['resultTitle'] = 'X-γ  剂  量  率  监  测  结  果';
       }
-      if (data.machineNO.indexOf('中子')) {
+      if (data.machineNO.indexOf('中子') >= 0) {
         data['projectType'] = '中子剂量率';
         data['resultTitle'] = '中 子 剂  量  率  监  测  结   果';
       }
