@@ -20,16 +20,6 @@ import { DocTemp } from '../entity/doc_temp';
 // Load the docx file as a binary
 let tempbin = fs.readFileSync(path.resolve(__dirname, '../../', 'temp.docx'), 'binary');
 
-let imageModule = new ImageModule({
-  centered: false,
-  getImage: (tagValue, tagName) => {
-    return fs.readFileSync(tagValue);
-  },
-  getSize: (img, tagValue, tagName) => {
-    return [500, 500];
-  },
-});
-
 @Injectable()
 export class ReportsService {
   constructor(
@@ -108,7 +98,15 @@ export class ReportsService {
     }
     try {
       let doc = new Docxtemplater();
-      doc.attachModule(imageModule);
+      doc.attachModule(new ImageModule({
+        centered: false,
+        getImage: (tagValue, tagName) => {
+          return fs.readFileSync(tagValue);
+        },
+        getSize: (img, tagValue, tagName) => {
+          return [500, 500];
+        },
+      }));
       doc.loadZip(new JSZip(tempbin));
 
       // set the templateVariables
