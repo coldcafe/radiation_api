@@ -107,7 +107,8 @@ export class ReportsService {
           return [500, 500];
         },
       }));
-      doc.loadZip(new JSZip(tempbin));
+      let zipTemp = await JSZip.loadAsync(tempbin)
+      doc.loadZip(zipTemp);
 
       // set the templateVariables
       let data = {
