@@ -191,7 +191,7 @@ export class ReportsService {
     if (measurePerson) {
       where['measurePerson'] = measurePerson;
     }
-    if (userInfo.role !== 'superadmin') {
+    if (userInfo.role !== 'superadmin' && userInfo.role !== 'checker') {
       where['user'] = userInfo.id;
     }
     return { where, page, limit };
