@@ -4,6 +4,7 @@ import { User } from '../entity/user';
 import { ApiUseTags, ApiResponse } from '@nestjs/swagger';
 import { LoginReq, LoginRes, RegisterReq, UpdateUserInoReq, UserListReq, UserDto, UserListDto } from './users.dto';
 import { Roles } from '../grards/roles.grards';
+import { UserInfo } from 'decorators/userinfo';
 @ApiUseTags('users')
 @Controller('users')
 export class UsersController {
@@ -66,5 +67,21 @@ export class UsersController {
   @ApiResponse({ status: 204 })
   async changePassword(@Body() updateUserInoReq: UpdateUserInoReq) {
     await this.usersService.updateUserInfo(updateUserInoReq);
+  }
+
+  @Roles()
+  @Get('/roles')
+  @HttpCode(200)
+  @ApiResponse({ status: 200 })
+  async getRoles(@UserInfo('role') role: string) {
+    return this.usersService.getRoles(role);
+  }
+
+  @Roles()
+  @Get('/area')
+  @HttpCode(200)
+  @ApiResponse({ status: 200 })
+  async getArea(@UserInfo('id') userId: number) {
+    return this.usersService.getArea(userId);
   }
 }

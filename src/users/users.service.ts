@@ -1,6 +1,6 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { User } from '../entity/user';
-import { Repository } from 'typeorm';
+import { Repository, MoreThan } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CONST } from '../config/constants';
 import axios from 'axios';
@@ -8,15 +8,32 @@ import config from '../config';
 import * as jwt from 'jsonwebtoken';
 import { UpdateUserInoReq, UserListReq, UserDto } from './users.dto';
 import { UserInfo } from './users.interface';
+import roles from './roles';
+import { Cnarea } from 'entity/cnarea';
+import * as bluebird from 'bluebird';
+import { Company } from 'entity/company';
 
 @Injectable()
 export class UsersService {
   private readonly jwtSecret: string;
+  private allArea: Cnarea[];
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Cnarea)
+    private readonly cnareaRepository: Repository<Cnarea>,
+    @InjectRepository(Company)
+    private readonly companyRepository: Repository<Company>,
   ) {
     this.jwtSecret = config.get('JWT_SECRET');
+    this.loadArea();
+  }
+
+  async loadArea() {
+    let allArea = await this.cnareaRepository.find({
+      select: ['id', 'parent_id', 'name'],
+    });
+    this.allArea = allArea;
   }
 
   async findAll(): Promise<User[]> {
@@ -104,5 +121,37 @@ export class UsersService {
       where,
     });
     return count;
+  }
+
+  async getRoles(role: string) {
+    let start = roles.findIndex(i => i.key === role);
+    if (start > 0) {
+      start++;
+    }
+    let end = start < 6 ? 6 : roles.length;
+    return roles.slice(start, end);
+  }
+
+  findArea(parent_id?: number) {
+    return this.allArea.filter(item => item.parent_id === parent_id);
+  }
+
+  async getArea(userId: number) {
+    let user = await this.userRepository.findOne({ id: userId });
+    if (user.role === 'districtadmin') {
+      return this.companyRepository.find({ areaId: user.areaId });
+    }
+    if (!this.allArea) {
+      await this.loadArea();
+    }
+    return this.getAreaItems(user.areaId);
+  }
+
+  getAreaItems(parent_id: number) {
+    let area = this.findArea(parent_id);
+    for (let item of area) {
+      item.items = this.getAreaItems(item.id);
+    }
+    return area;
   }
 }
