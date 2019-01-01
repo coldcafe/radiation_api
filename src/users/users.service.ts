@@ -17,6 +17,7 @@ import { Company } from 'entity/company';
 export class UsersService {
   private readonly jwtSecret: string;
   private allArea: Cnarea[];
+  private allCompany: Company[];
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -30,10 +31,15 @@ export class UsersService {
   }
 
   async loadArea() {
-    let allArea = await this.cnareaRepository.find({
-      select: ['id', 'parent_id', 'name'],
+    this.allArea = await this.cnareaRepository.find({
+      select: ['id', 'parent_id', 'name', 'level'],
     });
-    this.allArea = allArea;
+  }
+
+  async loadCompany() {
+    this.allCompany = await this.companyRepository.find({
+      select: ['id', 'areaId', 'name'],
+    });
   }
 
   async findAll(): Promise<User[]> {
@@ -60,7 +66,8 @@ export class UsersService {
     return token;
   }
 
-  async registor(username: string, password: string, role: string) {
+  async registor(username: string, password: string, role: string,
+                 areaId: number, campanyId: number, companyName: string, companyAreaId: number) {
     let _user = await this.userRepository.findOne({ username });
     if (_user) {
       throw new ForbiddenException('用户已存在');
@@ -68,7 +75,23 @@ export class UsersService {
     let user = new User();
     user.username = username;
     user.password = password;
-    user.role = role || 'user';
+    user.role = role;
+    if (areaId) {
+      user.areaId = areaId;
+    }
+    if (campanyId) {
+      user.campanyId = campanyId;
+    } else if (companyName) {
+      let company = await this.companyRepository.findOne({ name: companyName });
+      if (!company && companyAreaId) {
+        let area = await this.cnareaRepository.findOne({ id: companyAreaId });
+        if (area.level !== 2) {
+          throw new Error('非区级地点');
+        }
+        company =  await this.companyRepository.create({ areaId: companyAreaId, name });
+      }
+      user.campanyId = company.id;
+    }
     await user.save();
   }
 
@@ -125,9 +148,7 @@ export class UsersService {
 
   async getRoles(role: string) {
     let start = roles.findIndex(i => i.key === role);
-    if (start > 0) {
-      start++;
-    }
+    start++;
     let end = start < 6 ? 6 : roles.length;
     return roles.slice(start, end);
   }
@@ -136,21 +157,44 @@ export class UsersService {
     return this.allArea.filter(item => item.parent_id === parent_id);
   }
 
-  async getArea(userId: number) {
+  findCompany(areaId?: number) {
+    let company = this.allCompany.filter(item => item.areaId === areaId);
+    return [{ id: 999999, name: '新建企业' }, ...company];
+  }
+
+  async getArea(userId: number, tRole: string) {
     let user = await this.userRepository.findOne({ id: userId });
+    if (user.role === 'companyadmin') {
+      return [];
+    }
     if (user.role === 'districtadmin') {
-      return this.companyRepository.find({ areaId: user.areaId });
+      let company = await this.companyRepository.find({ areaId: user.areaId });
+      return [{ id: 999999, name: '新建企业' }, ...company];
     }
     if (!this.allArea) {
       await this.loadArea();
     }
-    return this.getAreaItems(user.areaId);
+    await this.loadCompany();
+    let roleIndex = roles.findIndex(i => i.key === tRole);
+    let tolevel = roleIndex - 2 >= 0 ? roleIndex - 2 : -1;
+    return this.getAreaItems(user.areaId, tolevel);
   }
 
-  getAreaItems(parent_id: number) {
+  getAreaItems(parent_id: number, tolevel: number) {
+    if (tolevel < 0) {
+      return [];
+    }
     let area = this.findArea(parent_id);
     for (let item of area) {
-      item.items = this.getAreaItems(item.id);
+      if (item.level >= tolevel) {
+        item.items = [];
+        continue;
+      }
+      if (item.level === 2) {
+        item.items = this.findCompany(item.id);
+      } else {
+        item.items = this.getAreaItems(item.id, tolevel);
+      }
     }
     return area;
   }

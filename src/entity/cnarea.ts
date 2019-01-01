@@ -38,5 +38,5 @@ export class Cnarea extends BaseEntity {
   @Column()
   lat: number;
 
-  items?: Cnarea[];
+  items?: any[];
 }

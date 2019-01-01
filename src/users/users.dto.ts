@@ -1,6 +1,7 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsString, IsInt, IsOptional, IsNotEmpty, IsEnum, IsIn } from 'class-validator';
+import roles from './roles';
 
 export class LoginReq {
 
@@ -34,9 +35,29 @@ export class RegisterReq {
   @ApiModelProperty()
   readonly password: string;
 
-  @IsIn(['user', 'checker'])
+  @IsIn(roles)
   @ApiModelProperty()
-  readonly role?: string;
+  readonly role: string;
+
+  @IsInt()
+  @IsOptional()
+  @ApiModelProperty()
+  readonly areaId?: number;
+
+  @IsString()
+  @IsOptional()
+  @ApiModelProperty()
+  readonly companyName?: string;
+
+  @IsInt()
+  @IsOptional()
+  @ApiModelProperty()
+  readonly companyAreaId?: number;
+
+  @IsInt()
+  @IsOptional()
+  @ApiModelProperty()
+  readonly companyId?: number;
 }
 
 export class UpdateUserInoReq {

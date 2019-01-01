@@ -24,7 +24,8 @@ export class UsersController {
   @HttpCode(204)
   @ApiResponse({ status: 204 })
   async registor(@Body() registerReq: RegisterReq) {
-    await this.usersService.registor(registerReq.username, registerReq.password, registerReq.role);
+    let { username, password, role, areaId, companyId, companyName, companyAreaId } = registerReq;
+    await this.usersService.registor(username, password, role, areaId, companyId, companyName, companyAreaId);
   }
 
   @Put()
@@ -81,7 +82,7 @@ export class UsersController {
   @Get('/area')
   @HttpCode(200)
   @ApiResponse({ status: 200 })
-  async getArea(@UserInfo('id') userId: number) {
-    return this.usersService.getArea(userId);
+  async getArea(@UserInfo('id') userId: number, @Query() query) {
+    return this.usersService.getArea(userId, query.tRole);
   }
 }
