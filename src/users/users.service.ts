@@ -74,6 +74,7 @@ export class UsersService {
     }
     let user = new User();
     user.username = username;
+    user.nickname = username;
     user.password = password;
     user.role = role;
     if (areaId) {

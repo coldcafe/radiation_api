@@ -22,10 +22,10 @@ export class User extends BaseEntity {
     @OneToMany(type => Report, report => report.user)
     reports: Report[];
 
-    @Column()
+    @Column({ default: 0 })
     areaId: number;
 
-    @Column()
+    @Column({ default: 0 })
     campanyId: number;
 
     @CreateDateColumn({ type: 'timestamp' })

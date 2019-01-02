@@ -35,7 +35,7 @@ export class RegisterReq {
   @ApiModelProperty()
   readonly password: string;
 
-  @IsIn(roles)
+  @IsString()
   @ApiModelProperty()
   readonly role: string;
 
