@@ -89,7 +89,7 @@ export class UsersService {
         if (area.level !== 2) {
           throw new Error('非区级地点');
         }
-        company =  await this.companyRepository.create({ areaId: companyAreaId, name });
+        company =  await this.companyRepository.create({ areaId: companyAreaId, name: companyName });
       }
       user.campanyId = company.id;
     }
