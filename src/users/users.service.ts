@@ -9,9 +9,9 @@ import * as jwt from 'jsonwebtoken';
 import { UpdateUserInoReq, UserListReq, UserDto } from './users.dto';
 import { UserInfo } from './users.interface';
 import roles from './roles';
-import { Cnarea } from 'entity/cnarea';
+import { Cnarea } from '../entity/cnarea';
 import * as bluebird from 'bluebird';
-import { Company } from 'entity/company';
+import { Company } from '../entity/company';
 
 @Injectable()
 export class UsersService {
