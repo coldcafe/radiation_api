@@ -150,6 +150,10 @@ export class UsersService {
       this.getAreaIds(areas, areaIds);
       where['areaId'] = In(areaIds);
     }
+    if (user.role === 'companyadmin') {
+      delete where['areaId'];
+      where['companyId'] = user.companyId;
+    }
     return { where, page, limit };
   }
 

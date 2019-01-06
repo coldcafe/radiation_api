@@ -10,55 +10,55 @@ export class Report extends BaseEntity {
   @ManyToOne(type => User, user => user.reports)
   user: User;
 
-  @Column()
+  @Column({ nullable: true })
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   delegateUnit: string;
 
-  @Column()
+  @Column({ nullable: true })
   measurePerson: string;
 
-  @Column()
+  @Column({ nullable: true })
   machineNO: string;
 
-  @Column()
+  @Column({ nullable: true })
   taskNO: string;
 
-  @Column()
+  @Column({ nullable: true })
   measuredAt: number;
 
-  @Column()
+  @Column({ nullable: true })
   type: string;
 
-  @Column()
+  @Column({ nullable: true })
   weather: string;
 
-  @Column()
+  @Column({ nullable: true })
   address: string;
 
-  @Column()
+  @Column({ nullable: true })
   unit: string;
 
-  @Column()
+  @Column({ nullable: true })
   contactPerson: string;
 
-  @Column()
+  @Column({ nullable: true })
   contactPersonTel: string;
 
-  @Column()
+  @Column({ nullable: true })
   GPS: string;
 
-  @Column()
+  @Column({ nullable: true })
   sketchMap: string;
 
-  @Column()
+  @Column({ nullable: true })
   docTempId: number;
 
-  @Column()
+  @Column({ nullable: true })
   pictures: string;
 
-  @Column('text')
+  @Column({ nullable: true, type: 'text' })
   result: string;
 
   @OneToMany(type => ReportData, reportData => reportData.report, {
