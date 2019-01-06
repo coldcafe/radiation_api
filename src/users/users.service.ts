@@ -141,10 +141,10 @@ export class UsersService {
       where['username'] = username;
     }
     let user = await this.userRepository.findOne({ id: userId });
+    if (!this.allArea) {
+      await this.loadArea();
+    }
     if (user.areaId) {
-      if (!this.allArea) {
-        await this.loadArea();
-      }
       let areas = this.getAreaItems(user.areaId, 2);
       let areaIds = [];
       this.getAreaIds(areas, areaIds);
