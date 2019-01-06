@@ -108,6 +108,12 @@ export class UserDto {
   nickname: string;
 
   @ApiModelProperty()
+  areaName: string;
+
+  @ApiModelProperty()
+  companyName: string;
+
+  @ApiModelProperty()
   role: string;
 
   @ApiModelProperty()

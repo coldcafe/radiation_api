@@ -1,6 +1,6 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { User } from '../entity/user';
-import { Repository, MoreThan } from 'typeorm';
+import { Repository, MoreThan, In } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CONST } from '../config/constants';
 import axios from 'axios';
@@ -67,7 +67,7 @@ export class UsersService {
   }
 
   async registor(username: string, password: string, role: string,
-                 areaId: number, campanyId: number, companyName: string, companyAreaId: number) {
+                 areaId: number, companyId: number, companyName: string, companyAreaId: number) {
     let _user = await this.userRepository.findOne({ username });
     if (_user) {
       throw new ForbiddenException('用户已存在');
@@ -80,8 +80,10 @@ export class UsersService {
     if (areaId) {
       user.areaId = areaId;
     }
-    if (campanyId) {
-      user.campanyId = campanyId;
+    if (companyId) {
+      let company = await this.companyRepository.findOne({ id: companyId });
+      user.companyId = companyId;
+      user.areaId = company.areaId;
     } else if (companyName) {
       let company = await this.companyRepository.findOne({ name: companyName });
       if (!company && companyAreaId) {
@@ -91,7 +93,8 @@ export class UsersService {
         }
         company =  await this.companyRepository.create({ areaId: companyAreaId, name: companyName });
       }
-      user.campanyId = company.id;
+      user.companyId = company.id;
+      user.areaId = company.areaId;
     }
     await user.save();
   }
@@ -119,7 +122,16 @@ export class UsersService {
     await user.save();
   }
 
-  async userQuery(userListReq: UserListReq) {
+  getAreaIds(areas, areaIds) {
+    for (let area of areas) {
+      areaIds.push(area.id);
+      if (area.items && area.items.length) {
+        this.getAreaIds(area.items, areaIds);
+      }
+    }
+  }
+
+  async userQuery(userListReq: UserListReq, userId: number) {
     let { username, nickname, page, limit } = userListReq;
     let where = {};
     if (nickname) {
@@ -127,6 +139,16 @@ export class UsersService {
     }
     if (username) {
       where['username'] = username;
+    }
+    let user = await this.userRepository.findOne({ id: userId });
+    if (user.areaId) {
+      if (!this.allArea) {
+        await this.loadArea();
+      }
+      let areas = this.getAreaItems(user.areaId, 2);
+      let areaIds = [];
+      this.getAreaIds(areas, areaIds);
+      where['areaId'] = In(areaIds);
     }
     return { where, page, limit };
   }
@@ -137,6 +159,17 @@ export class UsersService {
       take: limit,
       skip: (page - 1) * limit,
     });
+    await this.loadCompany();
+    for (let user of users) {
+      if (user.areaId) {
+        let area = this.allArea.find(i => i.id === user.areaId);
+        user['areaName'] = area ? area.name : '';
+      }
+      if (user.companyId) {
+        let company = this.allCompany.find(i => i.id === user.companyId);
+        user['companyName'] = company ? company.name : '';
+      }
+    }
     return users;
   }
 

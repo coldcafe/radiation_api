@@ -43,11 +43,11 @@ export class UsersController {
     await this.usersService.delete(parseInt(id, 10));
   }
 
-  @Roles('superadmin')
   @Get('/list')
+  @Roles()
   @ApiResponse({ status: 200, type: UserListDto })
-  async userList(@Query() userListReq: UserListReq) {
-    let { where, page, limit } = await this.usersService.userQuery(userListReq);
+  async userList(@UserInfo('id') userId: number, @Query() userListReq: UserListReq) {
+    let { where, page, limit } = await this.usersService.userQuery(userListReq, userId);
     let users = await this.usersService.userList(where, page, limit);
     let count = await this.usersService.userCount(where);
     let usersDto = users.map(((user) => {
@@ -56,6 +56,8 @@ export class UsersController {
       userDto.username = user.username;
       userDto.nickname = user.nickname;
       userDto.role = user.role;
+      userDto.areaName = user['areaName'];
+      userDto.companyName = user['companyName'];
       userDto.createdAt = user.createdAt;
       return userDto;
     }));

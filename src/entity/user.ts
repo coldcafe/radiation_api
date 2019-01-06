@@ -26,7 +26,7 @@ export class User extends BaseEntity {
     areaId: number;
 
     @Column({ default: 0 })
-    campanyId: number;
+    companyId: number;
 
     @CreateDateColumn({ type: 'timestamp' })
     createdAt: Date;
