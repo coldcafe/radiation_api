@@ -12,5 +12,8 @@ import { Company } from '../entity/company';
   providers: [
     UsersService,
   ],
+  exports: [
+    UsersService,
+  ],
 })
 export class UsersModule {}

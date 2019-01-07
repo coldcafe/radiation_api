@@ -61,6 +61,8 @@ export class UsersService {
       id: user.id,
       username: user.username,
       role: user.role,
+      areaId: user.areaId,
+      companyId: user.companyId,
     };
     let token = jwt.sign(payload, this.jwtSecret);
     return token;
@@ -91,7 +93,10 @@ export class UsersService {
         if (area.level !== 2) {
           throw new Error('非区级地点');
         }
-        company =  await this.companyRepository.create({ areaId: companyAreaId, name: companyName });
+        company = new Company();
+        company.areaId = companyAreaId;
+        company.name = companyName;
+        await company.save();
       }
       user.companyId = company.id;
       user.areaId = company.areaId;
@@ -216,6 +221,16 @@ export class UsersService {
     let roleIndex = roles.findIndex(i => i.key === tRole);
     let tolevel = roleIndex - 2 >= 0 ? roleIndex - 2 : -1;
     return this.getAreaItems(user.areaId, tolevel);
+  }
+
+  async getChildAreaIds(areaId: number) {
+    if (!this.allArea) {
+      await this.loadArea();
+    }
+    let areas = this.getAreaItems(areaId, 2);
+    let areaIds = [areaId];
+    this.getAreaIds(areas, areaIds);
+    return areaIds;
   }
 
   getAreaItems(parent_id: number, tolevel: number) {

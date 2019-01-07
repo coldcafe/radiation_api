@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { User } from '../entity/user';
-import { Repository, MoreThan, Between } from 'typeorm';
+import { Repository, MoreThan, Between, In } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like } from 'typeorm';
 import { Report } from '../entity/report';
@@ -16,6 +16,7 @@ import * as JSZip from 'jszip';
 import * as Docxtemplater from 'docxtemplater';
 import * as ImageModule from 'docxtemplater-image-module';
 import { DocTemp } from '../entity/doc_temp';
+import { UsersService } from '../users/users.service';
 
 // Load the docx file as a binary
 let tempbin = fs.readFileSync(path.resolve(__dirname, '../../', 'temp.docx'), 'binary');
@@ -33,6 +34,7 @@ export class ReportsService {
     private readonly sketchMapRepository: Repository<SketchMap>,
     @InjectRepository(DocTemp)
     private readonly docTempRepository: Repository<DocTemp>,
+    private readonly usersService: UsersService,
   ) { }
 
   async createReport(userId: number, reportDto: ReportDto) {
@@ -176,7 +178,7 @@ export class ReportsService {
 
   }
 
-  reportQuery(userInfo: UserInfo, query: ReportListReq) {
+  async reportQuery(userInfo: UserInfo, query: ReportListReq) {
     let { startTime, endTime, address, measurePerson, page, limit } = query;
     let where = {};
     if (startTime) {
@@ -191,7 +193,12 @@ export class ReportsService {
     if (measurePerson) {
       where['measurePerson'] = measurePerson;
     }
-    if (userInfo.role !== 'superadmin' && userInfo.role !== 'checker') {
+    if (userInfo.areaId && userInfo.role !== 'tester') {
+      let areaIds = await this.usersService.getChildAreaIds(userInfo.areaId);
+      let users = await this.userRepository.find({ areaId: In(areaIds), role: 'tester' });
+      where['user'] = In(users.map(i => i.id));
+    }
+    if (userInfo.role === 'tester') {
       where['user'] = userInfo.id;
     }
     return { where, page, limit };

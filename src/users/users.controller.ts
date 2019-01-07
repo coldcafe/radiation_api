@@ -22,9 +22,13 @@ export class UsersController {
 
   @Post('/registor')
   @HttpCode(204)
+  @Roles()
   @ApiResponse({ status: 204 })
-  async registor(@Body() registerReq: RegisterReq) {
+  async registor(@UserInfo() user, @Body() registerReq: RegisterReq) {
     let { username, password, role, areaId, companyId, companyName, companyAreaId } = registerReq;
+    if (user.role === 'companyadmin') {
+      companyId = user.companyId;
+    }
     await this.usersService.registor(username, password, role, areaId, companyId, companyName, companyAreaId);
   }
 
@@ -64,7 +68,7 @@ export class UsersController {
     return { users: usersDto, count };
   }
 
-  @Roles('superadmin')
+  @Roles()
   @Put('/password')
   @HttpCode(204)
   @ApiResponse({ status: 204 })

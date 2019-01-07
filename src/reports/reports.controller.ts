@@ -13,7 +13,7 @@ export class ReportsController {
   ) { }
 
   @Post('/upload')
-  @Roles()
+  @Roles('tester')
   @ApiResponse({ status: 201, type: ReportDto })
   async uploadReport(@UserInfo() userInfo, @Body() reportDto: ReportDto) {
     let report = await this.reportsService.createReport(userInfo.id, reportDto);
@@ -58,7 +58,7 @@ export class ReportsController {
   @Roles()
   @ApiResponse({ status: 200, type: ReportListDto })
   async reportList(@UserInfo() userInfo, @Query() query: ReportListReq) {
-    let { where, page, limit } = this.reportsService.reportQuery(userInfo, query);
+    let { where, page, limit } = await this.reportsService.reportQuery(userInfo, query);
 
     let reports = await this.reportsService.reportList(where, page, limit);
     let count = await this.reportsService.reportCount(where);
